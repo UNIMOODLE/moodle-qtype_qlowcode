@@ -1,10 +1,12 @@
 $(document).ready(function () {
   const iframe = document.getElementById("inlineFrameExample");
   let iWindow = iframe.contentWindow;
+  let info = $("#info");
 
   $(window).on("load", function () {
     // Run code
-    iWindow.postMessage("answer");
+    let message = JSON.stringify({ description: "info", info: info.val() });
+    iWindow.postMessage(message);
   });
 
   var fillButton = $('[name="fill"]');
@@ -13,7 +15,7 @@ $(document).ready(function () {
 
   fillButton.on("click", function (e) {
     e.preventDefault();
-    iWindow.postMessage("fill");
+    iWindow.postMessage(JSON.stringify({ description: "fill" }));
     $(this).blur();
   });
 
@@ -28,13 +30,8 @@ $(document).ready(function () {
     // extract the data from the message event
     const { data } = event;
 
-    console.log("Los datos son: " + data);
-
     if (JSON.parse(data).action == "answer") {
       $("*[id*=1_answer]:visible").each(function () {
-        // $(this).val(JSON.stringify(data));
-        // console.log(JSON.parse(data).answer);
-
         console.log("The answer is: " + JSON.parse(data).answer);
         $(this).val(JSON.parse(data).answer);
       });

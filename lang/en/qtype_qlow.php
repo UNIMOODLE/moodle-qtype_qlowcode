@@ -30,3 +30,4 @@ $string['pluginnameadding'] = 'Adding a qlow question';
 $string['pluginnameediting'] = 'Editing a qlow question';
 $string['pluginnamesummary'] = 'A qlow question type that allows something to be done that can test a student on some understanding.';
 $string['url'] = 'Question URL';
+$string['rightanswer'] = 'The correct answer is';

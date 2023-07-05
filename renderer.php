@@ -41,7 +41,7 @@ class qtype_qlow_renderer extends qtype_renderer
         question_attempt $qa,
         question_display_options $options
     ) {
-        global $CFG, $PAGE;
+        global $CFG, $PAGE, $USER, $DB;
         $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/question/type/qlow/javascript/jquery-3.7.0.min.js'));
         $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/question/type/qlow/javascript/qlow.js'));
 
@@ -51,30 +51,76 @@ class qtype_qlow_renderer extends qtype_renderer
         // $question = $qa->get_question();
         $inputname = $qa->get_qt_field_name('answer');
         // $ispreview = !isset($options->attempt);
-        $currentanswer = remove_blanks($qa->get_last_qt_var('answer'));
         // $question = $qa->get_question();
         // $questiontext = $question->format_questiontext($qa);
         // $result = html_writer::tag('div', $questiontext, array('class' => 'qtext'));
 
         // $inputname = $qa->get_qt_field_name('answer');
+
+        $currentanswer = remove_blanks($qa->get_last_qt_var('answer'));
+
+        // student response
+        $response = '';
+
+        $answer = qtype_qlow_question::decrypt_answer($qa->get_last_qt_var('answer'));
+        // $answer = $qa->get_last_qt_var('answer');
+
+        // save the correct answer in the database
+        if (!is_null($answer)) {
+            $answer_decode = json_decode($answer);
+            $qa->get_question()->rightanswer = $answer_decode->rightanswer;
+            $response = $answer_decode->response;
+
+            $qa_record = $DB->get_record('question_attempts', array('id' => $qa->get_database_id()));
+            if ($qa_record) {
+                $qa_record->rightanswer = $answer_decode->rightanswer;
+                $DB->update_record('question_attempts', $qa_record);
+            }
+        }
+
+
         $inputattributes = array(
             'type' => 'text',
             'name' => $inputname,
-            //$inputname,
             'value' => $currentanswer,
-            //$currentanswer,
             'id' => $inputname,
-            //$inputname,
             'size' => 20,
+            'readonly' => 'readonly',
             'class' => 'form-control d-inline',
         );
 
+        // the key here is temporary------------------------------------
+        $publicKey = "MIGeMA0GCSqGSIb3DQEBAQUAA4GMADCBiAKBgHLM3bC4Bhxa1yljiHByu26S9gTdh23Z742FQbLEErlCzJiysEGx5TOE1TezQnxTMRLm0+Mwn0mJuxVUzP38/leLxElWvkHQYKuJ/dFuLti+cnFe6MQI8zaVNPTI1XIxuFFFwSY93F3Wfgoz3TbU9M1hlRsCmDB4yYEjXPDJbKqhAgMBAAE=";
+        // $publicKey = "-----BEGIN PUBLIC KEY-----" . $publicKey . "-----END PUBLIC KEY-----";
+        //--------------------------------------------------------------
+        $info = json_encode(
+            array(
+                'lang' => current_language(),
+                'response' => $response,
+                'pk' => $publicKey,
+                'qaId' => $qa->get_database_id(),
+                'userId' => $USER->id
+            )
+        );
+
+        $infoattributes = array(
+            'type' => 'text',
+            'name' => 'info',
+            'value' => $info,
+            'id' => "info",
+            'size' => 20,
+            'readonly' => 'readonly',
+            'class' => 'form-control d-inline',
+        );
+
+        $src = $qa->get_question()->questionurl; // . '?pk=' . $publicKey . '?lang=' . current_language() . '?qaId=' . $qa->get_database_id() . '?userId=' . $USER->id;
+        // echo $src;
         $iframe = '<iframe id="inlineFrameExample"
             // title="Inline Frame Example"
             // width="620"
             // frameBorder="0"
             // height="230"
-            // src="' . $qa->get_question()->questionurl . '">
+            // src="' . $src . '">
             // </iframe>';
 
         // src="https://app.appsmith.com/app/questionario-v4/pregunta2-6493031af79393336aa41086">
@@ -92,6 +138,8 @@ class qtype_qlow_renderer extends qtype_renderer
         }*/
 
         $iframe .= html_writer::empty_tag('input', $inputattributes);
+        $iframe .= html_writer::empty_tag('input', $infoattributes);
+
         return $iframe;
     }
 
@@ -103,37 +151,7 @@ class qtype_qlow_renderer extends qtype_renderer
 
     public function correct_response(question_attempt $qa)
     {
-        return 'La respuesta correcta es: (...)' . $qa->get_question()->get_correct_response()["answer"];
-        // return $qa->get_question()->get_correct_response();
+        $rightanswer = $qa->get_question()->get_correct_response()["answer"];
+        return get_string("rightanswer", 'qtype_qlow') . ' : ' . $rightanswer;
     }
-
-    // public function combined_feedback(question_attempt $qa)
-    // {
-    //     exit();
-    //     $question = $qa->get_question();
-
-    //     $state = $qa->get_state();
-
-    //     if (!$state->is_finished()) {
-    //         $response = $qa->get_last_qt_data();
-    //         if (!$qa->get_question()->is_gradable_response($response)) {
-    //             return '';
-    //         }
-    //         list($notused, $state) = $qa->get_question()->grade_response($response);
-    //     }
-
-    //     $feedback = '';
-    //     $field = $state->get_feedback_class() . 'feedback';
-    //     $format = $state->get_feedback_class() . 'feedbackformat';
-    //     if ($question->$field) {
-    //         $feedback .= $question->format_text(
-    //             $question->$field, $question->$format,
-    //             $qa,
-    //             'question',
-    //             $field, $question->id
-    //         );
-    //     }
-
-    //     return $feedback;
-    // }
 }

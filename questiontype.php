@@ -109,9 +109,8 @@ class qtype_qlow extends question_type
 
     public function initialise_question_answers(question_definition $question, $questiondata, $forceplaintextanswers = true)
     {
-
         //TODO
-        // $question->rightanswer = "Europa";
+        //$question->rightanswer = "Europa";
     }
 
     public function import_from_xml($data, $question, qformat_xml $format, $extra = null)

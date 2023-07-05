@@ -54,6 +54,7 @@ class qtype_qlow_question extends question_graded_automatically_with_countback
 { /* it may make more sense to think of this as get expected data types */
     // public $rightanswer;
 
+    public $rightanswer;
     public function get_expected_data()
     {
         return array('answer' => PARAM_RAW_TRIMMED);
@@ -77,7 +78,9 @@ class qtype_qlow_question extends question_graded_automatically_with_countback
     {
         // TODO
         if (array_key_exists('answer', $response)) {
-            $json_response = json_decode($response["answer"]);
+            $textPlain = $this->decrypt_answer($response["answer"]);
+            $json_response = json_decode($textPlain);
+
             if (!is_null($json_response)) {
                 return $json_response->response;
             }
@@ -94,16 +97,17 @@ class qtype_qlow_question extends question_graded_automatically_with_countback
             text 
             */
 
-        // if (array_key_exists('answer', $response)) {
-        //     $json_response = json_decode($response["answer"]);
-        //     if (!is_null($json_response)) {
-        //         return boolval($json_response->is_complete_response);
-        //     }
-        // }
+        if (array_key_exists('answer', $response)) {
+            $textPlain = $this->decrypt_answer($response["answer"]);
+            $json_response = json_decode($textPlain);
+            if (!is_null($json_response)) {
+                return boolval($json_response->completeResponse);
+            }
+        }
 
-        // return false;
+        return false;
 
-        return true;
+        // return true;
     }
 
     public function get_validation_error(array $response)
@@ -134,7 +138,7 @@ class qtype_qlow_question extends question_graded_automatically_with_countback
     public function is_same_response(array $prevresponse, array $newresponse)
     {
         // TODO.
-        return false;
+        return $prevresponse === $newresponse;
     }
 
     /**
@@ -148,11 +152,8 @@ class qtype_qlow_question extends question_graded_automatically_with_countback
      */
     public function get_correct_response()
     {
-        // TODO. 
-        //return array('answer' => $this->rightanswer);
-
-        // Unknown at the time
-        return null;
+        $rightanswer = array("answer" => $this->rightanswer);
+        return $rightanswer;
     }
     /**
      * Given a response, reset the parts that are wrong. Relevent in
@@ -197,21 +198,26 @@ class qtype_qlow_question extends question_graded_automatically_with_countback
      * @return array (number, integer) the fraction, and the state.
      */
 
+    public static function decrypt_answer($answer)
+    {
+        // the key here is temporary------------------------------------
+        $privateKey = "-----BEGIN RSA PRIVATE KEY-----MIICWgIBAAKBgHLM3bC4Bhxa1yljiHByu26S9gTdh23Z742FQbLEErlCzJiysEGx5TOE1TezQnxTMRLm0+Mwn0mJuxVUzP38/leLxElWvkHQYKuJ/dFuLti+cnFe6MQI8zaVNPTI1XIxuFFFwSY93F3Wfgoz3TbU9M1hlRsCmDB4yYEjXPDJbKqhAgMBAAECgYBRkas7c6Yz43/aErTRYVQ4Pwe7cURXE3EY10RVJug+5m3FWcHPC/3VW168kwx8lgfabFTFqrijYc+iWnzFQ0vcKPFi0JrjgR4PwA3XKWDdSPM7j4E6awcA5dGQFCrGfWNDMxsaBStOcZR4yYKDb/Y5sxRFfshpxjKlX+ZTBE5R+QJBAK8HehmblLLuilioga779S8zdBIAMnfUaDgRAGLu+eTRIVWlsJirCVBTWritjLYuD0fVeOIKeEXGlW6aqhIAeusCQQCn6Ine17uS1+gupxYz224LYN+qGVfwncoarBje1Mk+6yoNsYxQ13U9o0GYhmwJ/IK92e44AbnsEYN9uAYSk3WjAkBlSehpBVYKLm01XV6fCwQaqqYS/LY4Dl25hG06050dw8CMtfP6hZBAQdyQXy69Bu6k3W61MOXlS0SS20JsZIa9AkBrBYC7FO5tzkgjVESGkRo3DmwBU14F88zZ609+2EndXK7VQ5GYBXyo6OHqgeNjChubPsjj0dXbbd5Nx3m3ZV3ZAkBIK7GLX8F1wgWNkDR4AZ7yb14JB8zhRJuXz5mS6baJZPO5W4uRQLgcN/Y9WU6mAV3xohfnOixzBfP3mwfghINO-----END RSA PRIVATE KEY-----";
+        //--------------------------------------------------------------
+
+        // decrypt
+        $rsa = new Crypt_RSA();
+        $rsa->loadKey($privateKey); // $key->loadKey(file_get_contents('private_key_file'));
+        $rsa->setEncryptionMode(CRYPT_RSA_ENCRYPTION_PKCS1);
+        $cipherText = base64_decode($answer);
+
+        return $rsa->decrypt($cipherText);
+    }
+
     public function grade_response(array $response)
     {
-        // $publicKey = "MIGeMA0GCSqGSIb3DQEBAQUAA4GMADCBiAKBgHLM3bC4Bhxa1yljiHByu26S9gTdh23Z742FQbLEErlCzJiysEGx5TOE1TezQnxTMRLm0+Mwn0mJuxVUzP38/leLxElWvkHQYKuJ/dFuLti+cnFe6MQI8zaVNPTI1XIxuFFFwSY93F3Wfgoz3TbU9M1hlRsCmDB4yYEjXPDJbKqhAgMBAAE=";
-        // $publicKey = "-----BEGIN PUBLIC KEY-----" . $publicKey . "-----END PUBLIC KEY-----";
-        $privateKey = "-----BEGIN RSA PRIVATE KEY-----MIICWgIBAAKBgHLM3bC4Bhxa1yljiHByu26S9gTdh23Z742FQbLEErlCzJiysEGx5TOE1TezQnxTMRLm0+Mwn0mJuxVUzP38/leLxElWvkHQYKuJ/dFuLti+cnFe6MQI8zaVNPTI1XIxuFFFwSY93F3Wfgoz3TbU9M1hlRsCmDB4yYEjXPDJbKqhAgMBAAECgYBRkas7c6Yz43/aErTRYVQ4Pwe7cURXE3EY10RVJug+5m3FWcHPC/3VW168kwx8lgfabFTFqrijYc+iWnzFQ0vcKPFi0JrjgR4PwA3XKWDdSPM7j4E6awcA5dGQFCrGfWNDMxsaBStOcZR4yYKDb/Y5sxRFfshpxjKlX+ZTBE5R+QJBAK8HehmblLLuilioga779S8zdBIAMnfUaDgRAGLu+eTRIVWlsJirCVBTWritjLYuD0fVeOIKeEXGlW6aqhIAeusCQQCn6Ine17uS1+gupxYz224LYN+qGVfwncoarBje1Mk+6yoNsYxQ13U9o0GYhmwJ/IK92e44AbnsEYN9uAYSk3WjAkBlSehpBVYKLm01XV6fCwQaqqYS/LY4Dl25hG06050dw8CMtfP6hZBAQdyQXy69Bu6k3W61MOXlS0SS20JsZIa9AkBrBYC7FO5tzkgjVESGkRo3DmwBU14F88zZ609+2EndXK7VQ5GYBXyo6OHqgeNjChubPsjj0dXbbd5Nx3m3ZV3ZAkBIK7GLX8F1wgWNkDR4AZ7yb14JB8zhRJuXz5mS6baJZPO5W4uRQLgcN/Y9WU6mAV3xohfnOixzBfP3mwfghINO-----END RSA PRIVATE KEY-----";
-
         $fraction = 0.0;
         if (array_key_exists('answer', $response)) {
-            // Decrypt
-            $rsa = new Crypt_RSA();
-            $rsa->loadKey($privateKey); // $key->loadKey(file_get_contents('private_key_file'));
-            $rsa->setEncryptionMode(CRYPT_RSA_ENCRYPTION_PKCS1);
-            $cipherText = base64_decode($response["answer"]);
-            $textPlain = $rsa->decrypt($cipherText); // cipherText
-
+            $textPlain = $this->decrypt_answer($response["answer"]);
             $json_response = json_decode($textPlain);
 
             if (!is_null($json_response)) {
@@ -219,12 +225,6 @@ class qtype_qlow_question extends question_graded_automatically_with_countback
             }
         }
 
-        // $result = json_decode($response["answer"]);
-
-        // $this->qtype->initialise_question_answers($this, array("answer"=>"Eur"));
-
-        // $fraction = $result->fraction;
-        // print_r(question_state::graded_state_for_fraction($fraction));
         return array($fraction, question_state::graded_state_for_fraction($fraction));
     }
 
@@ -256,17 +256,37 @@ class qtype_qlow_question extends question_graded_automatically_with_countback
         time, 2 if they get it right second try, and 1 of they get it right 
         on the third try.*/
         //TODO
-        // return 0;
 
-        $fraction_max = 0.0;
+        $fraction_ref = 0.999999;
+        $fraction_max = 0;
+        $tries = 0;
 
+        // Count attempts before exceeding the threshold
         foreach ($responses as $response) {
-            if (array_key_exists('answer', $response)) {
-                $json_response = json_decode($response["answer"]);
-                if (!is_null($json_response)) {
-                    $fraction = $json_response->fraction;
-                    $fraction_max = max($fraction_max, $fraction);
+            $textPlain = $this->decrypt_answer($response["answer"]);
+            $json_response = json_decode($textPlain);
+            if (!is_null($json_response)) {
+                $fraction = $json_response->fraction;
+
+                // bookkeeping within threshold
+                if ($fraction_max < $fraction_ref) {
+                    if ($fraction < $fraction_ref) {
+                        $tries++;
+                    }
                 }
+
+                $fraction_max = max($fraction_max, $fraction);
+            }
+        }
+
+        // threshold reached, apply penalty
+        if ($fraction_max > $fraction_ref) {
+            // ensure [0,1] interval
+            $filtered_penalty = min(1, max(0, $this->penalty));
+            if ($filtered_penalty > 0 && $tries > 1) {
+                $discount = $fraction_max * $filtered_penalty * $tries;
+                $fraction_max -= $discount;
+
             }
         }
 
