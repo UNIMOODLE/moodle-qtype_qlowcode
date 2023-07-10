@@ -45,19 +45,8 @@ class qtype_qlow_renderer extends qtype_renderer
         $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/question/type/qlow/javascript/jquery-3.7.0.min.js'));
         $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/question/type/qlow/javascript/qlow.js'));
 
-        // $qa->get_question()->rightanswer="Eur";
-        global $currentanswerwithhint;
-        require_once($CFG->dirroot . '/question/type/regexp/locallib.php');
-        // $question = $qa->get_question();
         $inputname = $qa->get_qt_field_name('answer');
-        // $ispreview = !isset($options->attempt);
-        // $question = $qa->get_question();
-        // $questiontext = $question->format_questiontext($qa);
-        // $result = html_writer::tag('div', $questiontext, array('class' => 'qtext'));
-
-        // $inputname = $qa->get_qt_field_name('answer');
-
-        $currentanswer = remove_blanks($qa->get_last_qt_var('answer'));
+        $currentanswer = "";
 
         // student response
         $response = '';

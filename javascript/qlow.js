@@ -30,9 +30,8 @@ $(document).ready(function () {
     // extract the data from the message event
     const { data } = event;
 
-    if (JSON.parse(data).action == "answer") {
+    if (typeof data == "string" && JSON.parse(data).action == "answer") {
       $("*[id*=1_answer]:visible").each(function () {
-        console.log("The answer is: " + JSON.parse(data).answer);
         $(this).val(JSON.parse(data).answer);
       });
     }
