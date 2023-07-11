@@ -50,6 +50,7 @@ class qtype_qlow_edit_form extends qlow_edit_form
     {
         $question = parent::data_preprocessing($question);
         $question = $this->data_preprocessing_hints($question);
+        $question = $this->data_preprocessing_combined_feedback($question);
 
         return $question;
     }

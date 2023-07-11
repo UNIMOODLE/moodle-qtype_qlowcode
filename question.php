@@ -79,10 +79,13 @@ class qtype_qlow_question extends question_graded_automatically_with_countback
         // TODO
         if (array_key_exists('answer', $response)) {
             $textPlain = $this->decrypt_answer($response["answer"]);
-            $json_response = json_decode($textPlain);
 
-            if (!is_null($json_response)) {
-                return $json_response->response;
+            if (!is_null($textPlain)) {
+                $json_response = json_decode($textPlain);
+
+                if (!is_null($json_response)) {
+                    return $json_response->response;
+                }
             }
         }
 
@@ -200,17 +203,21 @@ class qtype_qlow_question extends question_graded_automatically_with_countback
 
     public static function decrypt_answer($answer)
     {
-        // the key here is temporary------------------------------------
-        $privateKey = "-----BEGIN RSA PRIVATE KEY-----MIICWgIBAAKBgHLM3bC4Bhxa1yljiHByu26S9gTdh23Z742FQbLEErlCzJiysEGx5TOE1TezQnxTMRLm0+Mwn0mJuxVUzP38/leLxElWvkHQYKuJ/dFuLti+cnFe6MQI8zaVNPTI1XIxuFFFwSY93F3Wfgoz3TbU9M1hlRsCmDB4yYEjXPDJbKqhAgMBAAECgYBRkas7c6Yz43/aErTRYVQ4Pwe7cURXE3EY10RVJug+5m3FWcHPC/3VW168kwx8lgfabFTFqrijYc+iWnzFQ0vcKPFi0JrjgR4PwA3XKWDdSPM7j4E6awcA5dGQFCrGfWNDMxsaBStOcZR4yYKDb/Y5sxRFfshpxjKlX+ZTBE5R+QJBAK8HehmblLLuilioga779S8zdBIAMnfUaDgRAGLu+eTRIVWlsJirCVBTWritjLYuD0fVeOIKeEXGlW6aqhIAeusCQQCn6Ine17uS1+gupxYz224LYN+qGVfwncoarBje1Mk+6yoNsYxQ13U9o0GYhmwJ/IK92e44AbnsEYN9uAYSk3WjAkBlSehpBVYKLm01XV6fCwQaqqYS/LY4Dl25hG06050dw8CMtfP6hZBAQdyQXy69Bu6k3W61MOXlS0SS20JsZIa9AkBrBYC7FO5tzkgjVESGkRo3DmwBU14F88zZ609+2EndXK7VQ5GYBXyo6OHqgeNjChubPsjj0dXbbd5Nx3m3ZV3ZAkBIK7GLX8F1wgWNkDR4AZ7yb14JB8zhRJuXz5mS6baJZPO5W4uRQLgcN/Y9WU6mAV3xohfnOixzBfP3mwfghINO-----END RSA PRIVATE KEY-----";
-        //--------------------------------------------------------------
+        if (!is_null($answer)) {
+            // the key here is temporary------------------------------------
+            $privateKey = "-----BEGIN RSA PRIVATE KEY-----MIICWgIBAAKBgHLM3bC4Bhxa1yljiHByu26S9gTdh23Z742FQbLEErlCzJiysEGx5TOE1TezQnxTMRLm0+Mwn0mJuxVUzP38/leLxElWvkHQYKuJ/dFuLti+cnFe6MQI8zaVNPTI1XIxuFFFwSY93F3Wfgoz3TbU9M1hlRsCmDB4yYEjXPDJbKqhAgMBAAECgYBRkas7c6Yz43/aErTRYVQ4Pwe7cURXE3EY10RVJug+5m3FWcHPC/3VW168kwx8lgfabFTFqrijYc+iWnzFQ0vcKPFi0JrjgR4PwA3XKWDdSPM7j4E6awcA5dGQFCrGfWNDMxsaBStOcZR4yYKDb/Y5sxRFfshpxjKlX+ZTBE5R+QJBAK8HehmblLLuilioga779S8zdBIAMnfUaDgRAGLu+eTRIVWlsJirCVBTWritjLYuD0fVeOIKeEXGlW6aqhIAeusCQQCn6Ine17uS1+gupxYz224LYN+qGVfwncoarBje1Mk+6yoNsYxQ13U9o0GYhmwJ/IK92e44AbnsEYN9uAYSk3WjAkBlSehpBVYKLm01XV6fCwQaqqYS/LY4Dl25hG06050dw8CMtfP6hZBAQdyQXy69Bu6k3W61MOXlS0SS20JsZIa9AkBrBYC7FO5tzkgjVESGkRo3DmwBU14F88zZ609+2EndXK7VQ5GYBXyo6OHqgeNjChubPsjj0dXbbd5Nx3m3ZV3ZAkBIK7GLX8F1wgWNkDR4AZ7yb14JB8zhRJuXz5mS6baJZPO5W4uRQLgcN/Y9WU6mAV3xohfnOixzBfP3mwfghINO-----END RSA PRIVATE KEY-----";
+            //--------------------------------------------------------------
 
-        // decrypt
-        $rsa = new Crypt_RSA();
-        $rsa->loadKey($privateKey); // $key->loadKey(file_get_contents('private_key_file'));
-        $rsa->setEncryptionMode(CRYPT_RSA_ENCRYPTION_PKCS1);
-        $cipherText = base64_decode($answer);
+            // decrypt
+            $rsa = new Crypt_RSA();
+            $rsa->loadKey($privateKey); // $key->loadKey(file_get_contents('private_key_file'));
+            $rsa->setEncryptionMode(CRYPT_RSA_ENCRYPTION_PKCS1);
+            $cipherText = base64_decode($answer);
 
-        return $rsa->decrypt($cipherText);
+            return $rsa->decrypt($cipherText);
+        }
+
+        return null;
     }
 
     public function grade_response(array $response)

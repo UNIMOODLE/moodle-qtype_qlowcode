@@ -135,6 +135,24 @@ class qtype_qlow_renderer extends qtype_renderer
     public function specific_feedback(question_attempt $qa)
     {
         // TODO.
+        $answer = qtype_qlow_question::decrypt_answer($qa->get_last_qt_var('answer'));
+
+        if (!is_null($answer)) {
+            $answer_decode = json_decode($answer);
+
+            if (isset($answer_decode->fraction)) {
+                $fraction = $answer_decode->fraction;
+                if ($fraction > 0.99) {
+                    return $qa->get_question()->correctfeedback;
+                } else if ($fraction < 0.01) {
+                    return $qa->get_question()->incorrectfeedback;
+                } else {
+                    return $qa->get_question()->partiallycorrectfeedback;
+                }
+            }
+
+            return '';
+        }
         return '';
     }
 

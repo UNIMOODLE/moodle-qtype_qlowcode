@@ -95,6 +95,13 @@ class qtype_qlow extends question_type
     {
         //TODO
         parent::get_question_options($question);
+
+        // load combined feedback
+        global $DB, $OUTPUT;
+        if (!$question->options = $DB->get_record('question_qlow', array('questionid' => $question->id))) {
+            echo $OUTPUT->notification('Error: Missing question options!');
+            return false;
+        }
     }
 
     /**
