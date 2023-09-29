@@ -15,41 +15,41 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Mobile output class for qtype_qlow
+ * Mobile output class for qtype_qlowcode
  *
- * @package    qtype_qlow
+ * @package    qtype_qlowcode
  * @copyright  2018 YOUR NAME
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace qtype_qlow\output;
+namespace qtype_qlowcode\output;
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Mobile output class for qlow question type
+ * Mobile output class for qlowcode question type
  *
- * @package    qtype_qlow
+ * @package    qtype_qlowcode
  * @copyright  20XX YOUR NAME
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mobile {
 
     /**
-     * Returns the qlow question type for the quiz the mobile app.
+     * Returns the qlowcode question type for the quiz the mobile app.
      *
      * @return void
      */
-    public static function mobile_get_qlow() {
+    public static function mobile_get_qlowcode() {
         global $CFG;
         return [
             'templates' => [
                 [
                     'id' => 'main',
-                    'html' => file_get_contents($CFG->dirroot .'/question/type/qlow/mobile/qtype-qlow.html')
+                    'html' => file_get_contents($CFG->dirroot .'/question/type/qlowcode/mobile/qtype-qlowcode.html')
                     ]
             ],
-            'javascript' => file_get_contents($CFG->dirroot . '/question/type/qlow/mobile/mobile.js')
+            'javascript' => file_get_contents($CFG->dirroot . '/question/type/qlowcode/mobile/mobile.js')
         ];
     }
 }

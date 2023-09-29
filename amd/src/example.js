@@ -14,11 +14,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * qlow setup the ES6 javascript for the question type
+ * qlowcode setup the ES6 javascript for the question type
  * https://docs.moodle.org/dev/Javascript_Modules#ES6_Modules_.28Moodle_v3.8_and_above.29
  *
  * @package    qtype
- * @subpackage qlow
+ * @subpackage qlowcode
  * @copyright  2023 ISYC
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

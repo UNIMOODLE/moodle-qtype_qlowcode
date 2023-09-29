@@ -18,20 +18,20 @@
  * Multi-answer question type upgrade code.
  *
  * @package    qtype
- * @subpackage qlow
+ * @subpackage qlowcode
  * @copyright  2912 Marcus Green 
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Upgrade code for the qlow question type.
+ * Upgrade code for the qlowcode question type.
  * A selection of things you might want to do when upgrading
  * to a new version. This file is generally not needed for 
  * the first release of a question type.
  * @param int $oldversion the version we are upgrading from.
  */
-function xmldb_qtype_qlow_upgrade($oldversion = 0) {
+function xmldb_qtype_qlowcode_upgrade($oldversion = 0) {
     global $CFG, $DB;
 
     $dbman = $DB->get_manager();

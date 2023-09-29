@@ -64,9 +64,9 @@ be ignored.
 
 ## Use
 
-* Copy or rename the module directory to qlow.
-* Replace all occurances of qlow in files with the new name for your question type.
-* Rename files that have qlow replacing qlow with the new name for your question type.
+* Copy or rename the module directory to qlowcode.
+* Replace all occurances of qlowcode in files with the new name for your question type.
+* Rename files that have qlowcode replacing qlowcode with the new name for your question type.
 * Replace '@copyright  2023 ISYC' with something like @copyright  2016 Marcus Green (mgreen@example.org)
 * See http://docs.moodle.org/dev/Question_types for more info on how to create a question type plug in. Please add to it where
  you can.

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="question/type/qlow/db" VERSION="20230523" COMMENT="XMLDB file for Moodle question/type/qlow"
+<XMLDB PATH="question/type/qlowcode/db" VERSION="20230923" COMMENT="XMLDB file for Moodle question/type/qlowcode"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="question_qlow" COMMENT="description of table, e.g. options associated overall question">
+    <TABLE NAME="question_qlowcode" COMMENT="description of table, e.g. options associated overall question">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="questionid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Foreign key references question.id"/>
@@ -19,6 +19,21 @@
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
         <KEY NAME="questionid" TYPE="foreign" FIELDS="questionid" REFTABLE="question" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="question_qlowcode_temp" COMMENT="description of table, e.g. options associated overall question">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="qaid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Question attempt ID"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="User ID"/>
+        <FIELD NAME="eid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="score" TYPE="number" LENGTH="38" NOTNULL="true" SEQUENCE="false" DECIMALS="19" COMMENT="Score"/>
+        <FIELD NAME="response" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="User response"/>
+        <FIELD NAME="equation" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Equation"/>
+        <FIELD NAME="resultcorrect" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
   </TABLES>

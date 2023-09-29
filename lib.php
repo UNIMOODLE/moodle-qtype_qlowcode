@@ -18,7 +18,7 @@
  * Serve question type files
  *
  * @since      2.0
- * @package    qtype_qlow
+ * @package    qtype_qlowcode
  * @copyright  2023 ISYC
 
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -29,8 +29,8 @@ defined('MOODLE_INTERNAL') || die();
 
 
 /**
- * Checks file access for qlow questions.
- * @package  qtype_qlow
+ * Checks file access for qlowcode questions.
+ * @package  qtype_qlowcode
  * @category files
  * @param stdClass $course course object
  * @param stdClass $cm course module object
@@ -41,8 +41,8 @@ defined('MOODLE_INTERNAL') || die();
  * @param array $options additional options affecting the file serving
  * @return bool
  */
-function qtype_qlow_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
+function qtype_qlowcode_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
     global $DB, $CFG;
     require_once($CFG->libdir . '/questionlib.php');
-    question_pluginfile($course, $context, 'qtype_qlow', $filearea, $args, $forcedownload, $options);
+    question_pluginfile($course, $context, 'qtype_qlowcode', $filearea, $args, $forcedownload, $options);
 }

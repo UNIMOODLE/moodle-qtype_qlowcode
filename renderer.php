@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * qlow question renderer class.
+ * qlowcode question renderer class.
  *
  * @package    qtype
- * @subpackage qlow
+ * @subpackage qlowcode
  * @copyright  2023 ISYC
 
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -27,72 +27,92 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once($CFG->dirroot . '/question/type/qlowcode/qlowcodelib.php');
 
 /**
- * Generates the output for qlow questions.
+ * Generates the output for qlowcode questions.
  *
  * @copyright  2023 ISYC
 
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_qlow_renderer extends qtype_renderer
+class qtype_qlowcode_renderer extends qtype_renderer
 {
     public function formulation_and_controls(
         question_attempt $qa,
         question_display_options $options
     ) {
         global $CFG, $PAGE, $USER, $DB;
-        $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/question/type/qlow/javascript/jquery-3.7.0.min.js'));
-        $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/question/type/qlow/javascript/qlow.js'));
+        $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/question/type/qlowcode/javascript/jquery-3.7.0.min.js'));
+        $PAGE->requires->js(new moodle_url($CFG->wwwroot . '/question/type/qlowcode/javascript/qlowcode.js'));
 
-        $inputname = $qa->get_qt_field_name('answer');
-        $currentanswer = "";
+        $lang = current_language();
+        $qaId = $qa->get_database_id();
+        $userId = $USER->id;
 
-        // student response
-        $response = '';
+        // Aquire temp data
 
-        $answer = qtype_qlow_question::decrypt_answer($qa->get_last_qt_var('answer'));
-        // $answer = $qa->get_last_qt_var('answer');
-
-        // save the correct answer in the database
-        if (!is_null($answer)) {
-            $answer_decode = json_decode($answer);
-            $qa->get_question()->rightanswer = $answer_decode->rightanswer;
-            $response = $answer_decode->response;
-
-            $qa_record = $DB->get_record('question_attempts', array('id' => $qa->get_database_id()));
-            if ($qa_record) {
-                $qa_record->rightanswer = $answer_decode->rightanswer;
-                $DB->update_record('question_attempts', $qa_record);
+        $responses = array();
+        $resultscorrect = array();
+        $equations = array();
+        $rightanswer = null;
+        $records = $DB->get_records('question_qlowcode_temp', array(
+            'qaid' => $qaId, 'userid' => $userId)
+        );
+        if ($records) {            
+            foreach ($records as $record) {
+                array_push($responses, $record->response);
+                array_push($resultscorrect, $record->resultcorrect);
+                $equations[$record->eid] = $record->equation;
             }
-        }
 
+            // Force rightanswer update
 
-        $inputattributes = array(
-            'type' => 'text',
-            'name' => $inputname,
-            'value' => $currentanswer,
-            'id' => $inputname,
-            'size' => 20,
-            'readonly' => 'readonly',
-            'class' => 'form-control d-inline',
+            $qa_record = $DB->get_record('question_attempts', array('id' => $qaId));
+            if ($qa_record) {
+                $rightanswer = implode(',', $resultscorrect);
+                $qa_record->rightanswer = $rightanswer;
+                $DB->update_record('question_attempts', $qa_record);
+            }            
+        }        
+
+        // passing data back to question class (overrated)
+
+        $qa->get_question()->qaId = $qaId;
+        $qa->get_question()->userId = $userId;
+        $qa->get_question()->rightanswer = $rightanswer;
+        
+        // expected data
+
+        $qaId_qt_field = $qa->get_qt_field_name('qaId');
+        $qaIdAttributes = array(
+            'type' => 'hidden',
+            'name' =>  $qaId_qt_field,
+            'id' => $qaId_qt_field,
+            'value' => $qaId,
         );
 
-        // the key here is temporary------------------------------------
-        $publicKey = "MIGeMA0GCSqGSIb3DQEBAQUAA4GMADCBiAKBgHLM3bC4Bhxa1yljiHByu26S9gTdh23Z742FQbLEErlCzJiysEGx5TOE1TezQnxTMRLm0+Mwn0mJuxVUzP38/leLxElWvkHQYKuJ/dFuLti+cnFe6MQI8zaVNPTI1XIxuFFFwSY93F3Wfgoz3TbU9M1hlRsCmDB4yYEjXPDJbKqhAgMBAAE=";
-        // $publicKey = "-----BEGIN PUBLIC KEY-----" . $publicKey . "-----END PUBLIC KEY-----";
-        //--------------------------------------------------------------
+        $userId_qt_field = $qa->get_qt_field_name('userId');
+        $userIdAttributes = array(
+            'type' => 'hidden',
+            'name' =>  $userId_qt_field,
+            'id' => $userId_qt_field,
+            'value' => $userId,
+        );
+
+        // iframe payload
+
         $info = json_encode(
             array(
-                'lang' => current_language(),
-                'response' => $response,
-                'pk' => $publicKey,
-                'qaId' => $qa->get_database_id(),
-                'userId' => $USER->id
+                'lang' => $lang,
+                'response' => implode(',', $responses),
+                'qaId' => $qaId,
+                'userId' => $userId,
+                'equations' => $equations,
             )
         );
 
-        $infoattributes = array(
+        $infoAttributes = array(
             'type' => 'text',
             'name' => 'info',
             'value' => $info,
@@ -102,63 +122,89 @@ class qtype_qlow_renderer extends qtype_renderer
             'class' => 'form-control d-inline',
         );
 
-        $src = $qa->get_question()->questionurl; // . '?pk=' . $publicKey . '?lang=' . current_language() . '?qaId=' . $qa->get_database_id() . '?userId=' . $USER->id;
-        // echo $src;
-        $iframe = '<iframe id="inlineFrameExample"
-            // title="Inline Frame Example"
-            // width="620"
-            // frameBorder="0"
-            // height="230"
-            // src="' . $src . '">
-            // </iframe>';
+        // additional http query parameters
+        $http_query_data = array('userId' => $userId, 'qaId' => $qaId, 'embedded' => true);
+        // iframe source
+        $src = $qa->get_question()->questionurl . '?' . http_build_query($http_query_data);
 
-        // src="https://app.appsmith.com/app/questionario-v4/pregunta2-6493031af79393336aa41086">
-        // src="https://app.appsmith.com/app/questionario4/pregunta2-64372fe026013158789b124f?pk=MIGeMA0GCSqGSIb3DQEBAQUAA4GMADCBiAKBgHLM3bC4Bhxa1yljiHByu26S9gTdh23Z742FQbLEErlCzJiysEGx5TOE1TezQnxTMRLm0%2BMwn0mJuxVUzP38%2FleLxElWvkHQYKuJ%2FdFuLti%2BcnFe6MQI8zaVNPTI1XIxuFFFwSY93F3Wfgoz3TbU9M1hlRsCmDB4yYEjXPDJbKqhAgMBAAE%3D&embed=true">
+        $iframeAttributes = array(
+            'id' => 'inlineFrameExample',
+            'title' => 'Inline Frame Example',
+            'width' => '620',
+            'height' => '230',
+            'frameBorder' => '0',
+            'src' => $src,
+        );
 
-        // http://localhost/questions/acirculo.html
-        /* Some code to restore the state of the question as you move back and forth
-        from one question to another in a quiz and some code to disable the input fields
-        once a quesiton is submitted/marked */
+        $iframe = html_writer::start_tag('iframe', $iframeAttributes);
+        $iframe .= html_writer::empty_tag('input', $infoAttributes);
+        $iframe .= html_writer::end_tag('iframe');
 
-        /* if ($qa->get_state() == question_state::$invalid) {
-            $result .= html_writer::nonempty_tag('div',
-                    $question->get_validation_error(array('answer' => $currentanswer)),
-                    array('class' => 'validationerror'));
-        }*/
+        $result = html_writer::empty_tag('input', $qaIdAttributes);
+        $result .= html_writer::empty_tag('input', $userIdAttributes);
+        $result .= $iframe;
 
-        $iframe .= html_writer::empty_tag('input', $inputattributes);
-        $iframe .= html_writer::empty_tag('input', $infoattributes);
-
-        return $iframe;
+        return $result;
     }
 
     public function specific_feedback(question_attempt $qa)
     {
-        // TODO.
-        $answer = qtype_qlow_question::decrypt_answer($qa->get_last_qt_var('answer'));
+        global $USER, $DB;
 
-        if (!is_null($answer)) {
-            $answer_decode = json_decode($answer);
+        $fraction = 0;
+        $qaId = $qa->get_database_id();
+        $userId = $USER->id;
 
-            if (isset($answer_decode->fraction)) {
-                $fraction = $answer_decode->fraction;
-                if ($fraction > 0.99) {
-                    return $qa->get_question()->correctfeedback;
-                } else if ($fraction < 0.01) {
-                    return $qa->get_question()->incorrectfeedback;
-                } else {
-                    return $qa->get_question()->partiallycorrectfeedback;
-                }
+        $records = $DB->get_records('question_qlowcode_temp', array(
+            'qaid' => $qaId, 'userid' => $userId)
+        );
+        if ($records) { 
+
+            $count = 0;           
+            foreach ($records as $record) {
+                $fraction += $record->score;
+                $count += 1;
             }
 
-            return '';
+            if ($count > 0) {
+                $fraction /= $count; 
+            }
         }
-        return '';
+
+        if ($fraction > 0.99) {
+            return $qa->get_question()->correctfeedback;
+        } else if ($fraction < 0.01) {
+            return $qa->get_question()->incorrectfeedback;
+        } else {
+            return $qa->get_question()->partiallycorrectfeedback;
+        }
+
     }
 
     public function correct_response(question_attempt $qa)
     {
-        $rightanswer = $qa->get_question()->get_correct_response()["answer"];
-        return get_string("rightanswer", 'qtype_qlow') . ' : ' . $rightanswer;
+
+        global $USER, $DB;
+
+        $qaId = $qa->get_database_id();
+        $userId = $USER->id;
+        
+        $records = $DB->get_records('question_qlowcode_temp', array(
+            'qaid' => $qaId, 'userid' => $userId)
+        );
+
+        $correct_responses = null;
+        if ($records) {
+            $correct_responses = array();
+                       
+            foreach ($records as $record) {
+                array_push($correct_responses, $record->resultcorrect);
+            }
+            $correct_responses = implode(',', $correct_responses);
+        }  
+        
+        return get_string("rightanswer", 'qtype_qlowcode') . ' : ' . $correct_responses;
+
     }
+
 }

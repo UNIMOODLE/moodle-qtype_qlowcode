@@ -24,3 +24,45 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
+
+if ($ADMIN->fulltree) {
+
+    // SECURITY SECTION
+
+    $settings->add(new admin_setting_heading('qtype_qlowcode/security', 
+        get_string('security', 'qtype_qlowcode'), 
+        get_string('securityhelp', 'qtype_qlowcode')));
+
+    $settings->add(new admin_setting_configtext('qtype_qlowcode/privatekey',
+        get_string('privatekey', 'qtype_qlowcode'), get_string('privatekeyhelp', 'qtype_qlowcode'), 
+        null));  
+    
+    $settings->add(new admin_setting_configtext('qtype_qlowcode/publickey',
+        get_string('publickey', 'qtype_qlowcode'), get_string('publickeyhelp', 'qtype_qlowcode'), 
+        null));     
+
+    // QUESTIONNAIRE SECTION
+        
+    $settings->add(new admin_setting_heading('qtype_qlowcode/questionnaire', 
+        get_string('questionnaire', 'qtype_qlowcode'), 
+        get_string('questionnairehelp', 'qtype_qlowcode')));
+
+    // QUESTIONNAIRES
+    
+    foreach (range(1, 5) as $number) {
+
+        $settings->add(new admin_setting_description("qtype_qlowcode/questionnaire$number",
+            get_string('questionnaire', 'qtype_qlowcode') . " $number", ''
+        ));
+        $settings->add(new admin_setting_configtext("qtype_qlowcode/description$number",
+            get_string('description', 'qtype_qlowcode'), get_string('descriptionhelp', 'qtype_qlowcode'),
+            null, PARAM_RAW_TRIMMED
+        ));
+        $settings->add(new qtype_qlowcode_admin_setting_configtext_url("qtype_qlowcode/url$number",
+            get_string('url', 'qtype_qlowcode'), get_string('urlhelp', 'qtype_qlowcode'),
+            null, 's+u-a+p-f?q-r-'
+        ));
+
+    }
+
+}

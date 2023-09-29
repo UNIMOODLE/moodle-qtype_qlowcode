@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Question type class for the qlow question type.
+ * Question type class for the qlowcode question type.
  *
  * @package    qtype
- * @subpackage qlow
+ * @subpackage qlowcode
  * @copyright  2023 ISYC
 
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -31,22 +31,22 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/questionlib.php');
 require_once($CFG->dirroot . '/question/engine/lib.php');
-require_once($CFG->dirroot . '/question/type/qlow/question.php');
+require_once($CFG->dirroot . '/question/type/qlowcode/question.php');
 
 /**
- * The qlow question type.
+ * The qlowcode question type.
  *
  * @copyright  2023 ISYC
 
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_qlow extends question_type
+class qtype_qlowcode extends question_type
 {
 
     /* ties additional table fields to the database */
     public function extra_question_fields()
     {
-        return array('question_qlow', 'questionurl');
+        return array('question_qlowcode', 'questionurl');
     }
     public function move_files($questionid, $oldcontextid, $newcontextid)
     {
@@ -71,18 +71,29 @@ class qtype_qlow extends question_type
     public function save_question_options($question)
     {
         global $DB;
-        $options = $DB->get_record('question_qlow', array('questionid' => $question->id));
+        $options = $DB->get_record('question_qlowcode', array('questionid' => $question->id));
         if (!$options) {
             $options = new stdClass();
             $options->questionid = $question->id;
-            $options->questionurl = $question->questionurl;
+
+            if (isset($question->questionnaire) && isset($question->questionnairequestion)) {
+                // some sanitation, may be overrated!!!
+                $_questionnaire = rtrim(trim($question->questionnaire), '/');
+                $_question = ltrim(trim($question->questionnairequestion), '/');
+
+                $questionurl = $_questionnaire . '/' . $_question;
+                if (validateUrlSyntax($questionurl, 's+u-a+p-f+q-r-')) {
+                    $options->questionurl = $questionurl;
+                }
+
+            }
 
             /* add any more non combined feedback fields here */
 
-            $options->id = $DB->insert_record('question_qlow', $options);
+            $options->id = $DB->insert_record('question_qlowcode', $options);
         }
         $options = $this->save_combined_feedback_helper($options, $question, $question->context, true);
-        $DB->update_record('question_qlow', $options);
+        $DB->update_record('question_qlowcode', $options);
 
         $this->save_hints($question);
     }
@@ -96,12 +107,13 @@ class qtype_qlow extends question_type
         //TODO
         parent::get_question_options($question);
 
-        // load combined feedback
+        // Load combined feedback
         global $DB, $OUTPUT;
-        if (!$question->options = $DB->get_record('question_qlow', array('questionid' => $question->id))) {
+        if (!$question->options = $DB->get_record('question_qlowcode', array('questionid' => $question->id))) {
             echo $OUTPUT->notification('Error: Missing question options!');
             return false;
         }
+
     }
 
     /**
@@ -117,12 +129,11 @@ class qtype_qlow extends question_type
     public function initialise_question_answers(question_definition $question, $questiondata, $forceplaintextanswers = true)
     {
         //TODO
-        //$question->rightanswer = "Europa";
     }
 
     public function import_from_xml($data, $question, qformat_xml $format, $extra = null)
     {
-        if (!isset($data['@']['type']) || $data['@']['type'] != 'question_qlow') {
+        if (!isset($data['@']['type']) || $data['@']['type'] != 'question_qlowcode') {
             return false;
         }
         $question = parent::import_from_xml($data, $question, $format, null);
@@ -134,7 +145,7 @@ class qtype_qlow extends question_type
     {
         global $CFG;
         $pluginmanager = core_plugin_manager::instance();
-        $gapfillinfo = $pluginmanager->get_plugin_info('question_qlow');
+        $gapfillinfo = $pluginmanager->get_plugin_info('question_qlowcode');
         $output = parent::export_to_xml($question, $format);
         //TODO
         $output .= $format->write_combined_feedback($question->options, $question->id, $question->contextid);

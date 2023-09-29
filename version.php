@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * qlow question type version information.
+ * qlowcode question type version information.
  *
  * @package    qtype
- * @subpackage qlow
+ * @subpackage qlowcode
  * @copyright  2023 ISYC
 
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -26,8 +26,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'qtype_qlow';
-$plugin->version   = 2013012901;
+$plugin->component = 'qtype_qlowcode';
+$plugin->version   = 2013012909;
 
 $plugin->requires  = 2012062504;
 

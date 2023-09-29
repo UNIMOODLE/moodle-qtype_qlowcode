@@ -16,7 +16,7 @@
 /**
  * Contains the helper class for the select missing words question type tests.
  *
- * @package    qtype_qlow
+ * @package    qtype_qlowcode
  * @copyright  2023 ISYC
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -25,7 +25,7 @@ defined('MOODLE_INTERNAL') || die();
   /**
    * utilities used by the other test classes
    *
-   * @package    qtype_qlow
+   * @package    qtype_qlowcode
    * @copyright  YEAR YOURNAME
    * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
    */

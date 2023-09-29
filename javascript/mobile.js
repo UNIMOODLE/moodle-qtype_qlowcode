@@ -16,7 +16,7 @@
 /**
  * support for the mdl35+ mobile app
  * This file is the equivalent of 
- * qtype/qlow/classes/qlow.ts in the core app
+ * qtype/qlowcode/classes/qlowcode.ts in the core app
  * e.g.
  * https://github.com/moodlehq/moodlemobile2/blob/v3.5.0/src/addon/qtype/ddwtos/classes/ddwtos.ts
  */
