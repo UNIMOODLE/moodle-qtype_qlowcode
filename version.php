@@ -27,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'qtype_qlowcode';
-$plugin->version   = 2013012909;
+$plugin->version   = 2013012912;
 
 $plugin->requires  = 2012062504;
 

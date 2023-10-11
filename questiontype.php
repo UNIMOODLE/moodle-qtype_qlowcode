@@ -46,7 +46,7 @@ class qtype_qlowcode extends question_type
     /* ties additional table fields to the database */
     public function extra_question_fields()
     {
-        return array('question_qlowcode', 'questionurl');
+        return array('question_qlowcode', 'questionurl', 'framewidth');
     }
     public function move_files($questionid, $oldcontextid, $newcontextid)
     {
@@ -85,7 +85,10 @@ class qtype_qlowcode extends question_type
                 if (validateUrlSyntax($questionurl, 's+u-a+p-f+q-r-')) {
                     $options->questionurl = $questionurl;
                 }
+            }
 
+            if (isset($question->framewidth)) {
+                $options->framewidth = $question->framewidth;
             }
 
             /* add any more non combined feedback fields here */

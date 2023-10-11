@@ -37,7 +37,7 @@ $string['empty'] = 'Vacío';
 
 $string['question'] = 'Pregunta';
 $string['questionhelp'] = '';
-$string['question_help'] = 'Ayuda';
+$string['question_help'] = 'Pregunta vinculada al cuestionario. Cadena formada por valores alfa numéricos incluyendo los caracteres resta (-) y guión bajo (_)';
 
 $string['description'] = 'Descripción';
 $string['descriptionhelp'] = '';
@@ -69,3 +69,7 @@ $string['externalservicenamehelp'] = '';
 
 $string['token'] = 'Token';
 $string['tokenhelp'] = '';
+
+$string['framewidth'] = 'Ancho del marco';
+$string['framewidthhelp'] = '';
+$string['framewidth_help'] = 'Números positivos con símbolo de porcentaje opcional. Ejemplo: {45%, 320, 90.5%}';

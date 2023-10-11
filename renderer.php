@@ -24,6 +24,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use qbank_previewquestion\question_preview_options;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -49,6 +50,17 @@ class qtype_qlowcode_renderer extends qtype_renderer
         $lang = current_language();
         $qaId = $qa->get_database_id();
         $userId = $USER->id;
+        $display = null;
+
+        /**
+         * https://wimski.org/api/4.0/d8/d05/classquestion__display__options.html#details
+         * Classes extending question_display_options
+         */
+        if ($options instanceof question_preview_options) $display = 'preview';
+        if ($options instanceof mod_quiz_display_options) {
+            // Switch to 'review' if 'readonly' field on. Check comments from parent class 'question_display_options'
+            $display = $options->readonly ? 'review' : 'attempt';
+        }
 
         // Aquire temp data
 
@@ -105,6 +117,7 @@ class qtype_qlowcode_renderer extends qtype_renderer
         $info = json_encode(
             array(
                 'lang' => $lang,
+                'display' => $display,
                 'response' => implode(',', $responses),
                 'qaId' => $qaId,
                 'userId' => $userId,
@@ -123,15 +136,21 @@ class qtype_qlowcode_renderer extends qtype_renderer
         );
 
         // additional http query parameters
-        $http_query_data = array('userId' => $userId, 'qaId' => $qaId, 'embedded' => true);
+        $http_query_data = array('userId' => $userId, 'qaId' => $qaId, 'embedded' => true, 'display' => $display);
         // iframe source
         $src = $qa->get_question()->questionurl . '?' . http_build_query($http_query_data);
 
+        // Must be acquire from 'qtype_qlowcode'
+        $iframe_width = '100%';
+
+        if (isset($qa->get_question()->framewidth)) {
+            $iframe_width = $qa->get_question()->framewidth;
+        }
         $iframeAttributes = array(
             'id' => 'inlineFrameExample',
             'title' => 'Inline Frame Example',
-            'width' => '620',
-            'height' => '230',
+            'width' => $iframe_width,
+            'height' => '320',
             'frameBorder' => '0',
             'src' => $src,
         );

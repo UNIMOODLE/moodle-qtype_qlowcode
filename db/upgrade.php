@@ -32,8 +32,24 @@ defined('MOODLE_INTERNAL') || die();
  * @param int $oldversion the version we are upgrading from.
  */
 function xmldb_qtype_qlowcode_upgrade($oldversion = 0) {
-    global $CFG, $DB;
+    global $DB;
 
-    $dbman = $DB->get_manager();
-    return true;
+    if ($oldversion < 2013012912) {
+
+        // Define field framewidth to be added to question_qlowcode.
+        $table = new xmldb_table('question_qlowcode');
+        $field = new xmldb_field('framewidth', XMLDB_TYPE_TEXT, null, null, null, null, null, 'questionurl');
+
+        $dbman = $DB->get_manager();
+
+        // Conditionally launch add field framewidth.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Qlowcode savepoint reached.
+        upgrade_plugin_savepoint(true, 2013012912, 'qtype', 'qlowcode');
+
+        return true;
+    }    
 }

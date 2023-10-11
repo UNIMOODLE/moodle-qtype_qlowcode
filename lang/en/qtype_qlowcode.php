@@ -37,7 +37,7 @@ $string['empty'] = 'Empty';
 
 $string['question'] = 'Question';
 $string['questionhelp'] = '';
-$string['question_help'] = 'Question help';
+$string['question_help'] = 'Question linked to the questionnaire. String consisting of alphanumeric values including subtraction (-) and underscore (_)';
 
 $string['description'] = 'Description';
 $string['descriptionhelp'] = '';
@@ -69,3 +69,7 @@ $string['externalservicenamehelp'] = '';
 
 $string['token'] = 'Token';
 $string['tokenhelp'] = '';
+
+$string['framewidth'] = 'Frame width';
+$string['framewidthhelp'] = '';
+$string['framewidth_help'] = 'Positive numbers with optional percent symbol. Example: {45%, 320, 90.5%}';

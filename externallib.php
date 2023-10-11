@@ -24,6 +24,11 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
+// Write regular expression
+define('QLC_W_RGX', '/(?i)^write$/');
+// Read regular expression
+define('QLC_R_RGX', '/(?i)^read$/');
+
 class endpoint extends external_api
 {
     public static function execute_parameters(): external_function_parameters
@@ -36,10 +41,11 @@ class endpoint extends external_api
             'result_correct' => new external_value(PARAM_RAW_TRIMMED, 'Result'),
             'equation' => new external_value(PARAM_RAW_TRIMMED, 'Equation'), 
             'score' => new external_value(PARAM_RAW_TRIMMED, 'Score'),
+            'action' => new external_value(PARAM_RAW_TRIMMED, 'Action Write/Read'), 
         ]);
     }
 
-    public static function execute($qaid, $userid, $eid, $response, $result_correct, $equation,  $score): array
+    public static function execute($qaid, $userid, $eid, $response, $result_correct, $equation, $score, $action): array
     {
         global $DB;
 
@@ -49,29 +55,41 @@ class endpoint extends external_api
 
         if ($record) {
 
-            $record->response = $response;
-            $record->resultcorrect = $result_correct;
-            $record->equation = $equation;
-            $record->score = $score;
-
-            $result = $DB->update_record('question_qlowcode_temp', $record);
+            if (preg_match(QLC_R_RGX, $action)) {
+                // Read operation
+                $result = json_encode($record);
+            } else if (preg_match(QLC_W_RGX, $action)) {
+                // Write (update) operation
+                $record->response = $response;
+                $record->resultcorrect = $result_correct;
+                $record->equation = $equation;
+                $record->score = $score;
+    
+                $result = $DB->update_record('question_qlowcode_temp', $record);
+            } else {
+                $result = "Unknown action: $action";
+            }
 
         } else {
-            $record = new stdClass();
 
-            $record->id;
-            $record->qaid = $qaid;
-            $record->userid = $userid;
-            $record->eid = $eid;
-            $record->response = $response;
-            $record->resultcorrect = $result_correct;
-            $record->equation = $equation;
-            $record->score = $score;
+            if (preg_match(QLC_W_RGX, $action)) {
+                // Write (insert) operation
+                $record = new stdClass();
 
-            $result = $DB->insert_record('question_qlowcode_temp', $record);
+                $record->id;
+                $record->qaid = $qaid;
+                $record->userid = $userid;
+                $record->eid = $eid;
+                $record->response = $response;
+                $record->resultcorrect = $result_correct;
+                $record->equation = $equation;
+                $record->score = $score;
+    
+                $result = $DB->insert_record('question_qlowcode_temp', $record);
+            }
         }
 
-        return ['answer' => "done!$result"];
+        return ['answer' => $result];
     }
 
     public static function execute_returns(): external_single_structure

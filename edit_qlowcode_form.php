@@ -45,6 +45,7 @@ class qtype_qlowcode_edit_form extends qlowcode_edit_form
     {
         $questionnaire = null;
         $question = null;
+        $framewidth = '100%';
 
         if (isset($this->question->options->questionurl)) {
             if (validateUrlSyntax($this->question->options->questionurl, 's+u-a+p-f+q-r-')) {
@@ -54,6 +55,10 @@ class qtype_qlowcode_edit_form extends qlowcode_edit_form
                 $questionnaire = implode('/', $pieces);
             }
         }
+
+        if (isset($this->question->options->framewidth)) {
+            $framewidth = $this->question->options->framewidth;
+        }        
 
         $items = array();
         // Loop over questionnaires. ALERT the exact number is hardcoded.
@@ -103,6 +108,24 @@ class qtype_qlowcode_edit_form extends qlowcode_edit_form
             false,
             true
         );
+
+        $iframewidth = $mform->addElement(
+            'text', 
+            'framewidth', 
+            get_string('framewidth', 'qtype_qlowcode'), 
+            array('size' => '20', 'value' => $framewidth)
+        );
+        $mform->setType('framewidth', PARAM_RAW_TRIMMED);
+        $mform->addHelpButton('framewidth', 'framewidth', 'qtype_qlowcode');
+        $mform->addRule(
+            'framewidth', 
+            get_string('validateerror', 'admin'), 
+            'regex', 
+            '/^(([0-9]+)|([0-9]+[\.][0-9]+))%?$/', 
+            'server', 
+            false, 
+            true);
+        $mform->setDefault('framewidth', '100%');
 
         //
 
