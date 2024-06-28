@@ -31,28 +31,65 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace qtype_qlowcode\output;
-
+namespace qtype_qlowcode;
 /**
- * Mobile output class for qlowcode question type
+ * Constants class
  */
-class mobile {
+class constants {
     /**
-     * Returns the qlowcode question type for the quiz the mobile app.
-     *
-     * @return array
+     * Qlow number repository
      */
-    public static function mobile_get_qlowcode() {
-        global $CFG;
-        return [
-                'templates' => [
-                        [
-                                'id' => 'main',
-                                'html' => file_get_contents($CFG->dirroot .
-                                        '/question/type/qlowcode/mobile/addon-qtype-qlowcode.html'),
-                        ],
-                ],
-                'javascript' => file_get_contents($CFG->dirroot . '/question/type/qlowcode/mobile/mobile.js'),
-        ];
-    }
+    public const QLOW_NUMBER_REPOSITORY = 1;
+    /**
+     * Qlow default repository
+     */
+    public const QLOW_DEFAULT_REPOSITORY = 1;
+    /**
+     * Qlow role name
+     */
+    public const QLOW_ROLE_NAME = 'Qlowcode';
+    /**
+     * Qlow role shortname
+     */
+    public const QLOW_ROLE_SHORTNAME = 'qlowcode';
+    /**
+     * Qlow sso capability
+     */
+    public const QLOW_ROLE_CAPABILITY_SSO = 'qtype/qlowcode:access';
+    /**
+     * App url
+     */
+    public const QLOW_URL_APP = '/app/';
+    /**
+     * Workspaces url
+     */
+    public const QLOW_API_WORKSPACES = '/db/workspacesUser';
+    /**
+     * Applications url
+     */
+    public const QLOW_API_APPLICATIONS = '/db/applications';
+    /**
+     * Pages url
+     */
+    public const QLOW_API_PAGES = '/db/pages';
+    /**
+     * API usernew url
+     */
+    public const QLOW_API_USERNEW = '/qlc/userNew';
+    /**
+     * API login url
+     */
+    public const QLOW_API_URL = '/qlc/login.html';
+    /**
+     * API OK status
+     */
+    public const QLOW_API_STATUS_OK = 'OK';
+    /**
+     * API KO status.
+     */
+    public const QLOW_API_STATUS_KO = 'KO';
+    /**
+     * API token qlc
+     */
+    public const QLOW_API_QLC_TOKEN = 'q45253c53v54yy6ub6u34vb';
 }

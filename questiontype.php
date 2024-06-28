@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
+// This file is part of Moodle - https://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,130 +12,198 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+// Project implemented by the \"Recovery, Transformation and Resilience Plan.
+// Funded by the European Union - Next GenerationEU\".
+//
+// Produced by the UNIMOODLE University Group: Universities of
+// Valladolid, Complutense de Madrid, UPV/EHU, León, Salamanca,
+// Illes Balears, Valencia, Rey Juan Carlos, La Laguna, Zaragoza, Málaga,
+// Córdoba, Extremadura, Vigo, Las Palmas de Gran Canaria y Burgos.
 
 /**
- * Question type class for the qlowcode question type.
+ * Version details
  *
- * @package    qtype
- * @subpackage qlowcode
- * @copyright  2023 ISYC
-
+ * @package    qtype_qlowcode
+ * @copyright  2023 Proyecto UNIMOODLE
+ * @author     UNIMOODLE Group (Coordinator) <direccion.area.estrategia.digital@uva.es>
+ * @author     ISYC <soporte@isyc.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /*https://docs.moodle.org/dev/Question_types#Question_type_and_question_definition_classes*/
 
-
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/questionlib.php');
+require_once($CFG->libdir . '/validateurlsyntax.php');
+
 require_once($CFG->dirroot . '/question/engine/lib.php');
 require_once($CFG->dirroot . '/question/type/qlowcode/question.php');
 
 /**
  * The qlowcode question type.
- *
- * @copyright  2023 ISYC
-
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_qlowcode extends question_type
-{
-
+class qtype_qlowcode extends question_type {
     /* ties additional table fields to the database */
-    public function extra_question_fields()
-    {
-        return array('question_qlowcode', 'questionurl', 'framewidth');
+    /**
+     * Extra question fields
+     *
+     * @return string[]
+     */
+    public function extra_question_fields() {
+        return [
+                'question_qlowcode',
+                'configurl',
+                'applicationid',
+                'applicationurl',
+                'pageurl',
+                'framewidth',
+                'frameheight',
+        ];
     }
-    public function move_files($questionid, $oldcontextid, $newcontextid)
-    {
+
+    /**
+     * Move files
+     *
+     * @param int $questionid
+     * @param int $oldcontextid
+     * @param int $newcontextid
+     * @return void
+     */
+    public function move_files($questionid, $oldcontextid, $newcontextid) {
         parent::move_files($questionid, $oldcontextid, $newcontextid);
         $this->move_files_in_hints($questionid, $oldcontextid, $newcontextid);
     }
 
-    protected function delete_files($questionid, $contextid)
-    {
+    /**
+     *  Delete files
+     *
+     * @param int $questionid
+     * @param int $contextid
+     * @return void
+     */
+    protected function delete_files($questionid, $contextid) {
         parent::delete_files($questionid, $contextid);
         $this->delete_files_in_hints($questionid, $contextid);
     }
+
     /**
-     * @param stdClass $question
-     * @param array $form
-     * @return object
+     * Save question options
+     *
+     * @param object $question
+     * @return void
      */
-    public function save_question($question, $form)
-    {
-        return parent::save_question($question, $form);
-    }
-    public function save_question_options($question)
-    {
+    public function save_question_options($question) {
         global $DB;
-        $options = $DB->get_record('question_qlowcode', array('questionid' => $question->id));
+
+        $applicationurl = null;
+        if (isset($question->configurl) && isset($question->workspaceid) && isset($question->applicationid)) {
+            $applications = qtype_qlowcode\utils\qlc_utils::get_applications($question->configurl, $question->workspaceid);
+            if (!empty($applications)) {
+                foreach ($applications as $application) {
+                    if ($application["id"] == $question->applicationid) {
+                        $applicationurl = $application["slug"];
+                        break;
+                    }
+                }
+            }
+        }
+
+        $options = $DB->get_record('question_qlowcode', ['questionid' => $question->id]);
         if (!$options) {
             $options = new stdClass();
             $options->questionid = $question->id;
 
-            if (isset($question->questionnaire) && isset($question->questionnairequestion)) {
-                // some sanitation, may be overrated!!!
-                $_questionnaire = rtrim(trim($question->questionnaire), '/');
-                $_question = ltrim(trim($question->questionnairequestion), '/');
+            if (isset($question->configurl)) {
+                $options->configurl = $question->configurl;
+            }
 
-                $questionurl = $_questionnaire . '/' . $_question;
-                if (validateUrlSyntax($questionurl, 's+u-a+p-f+q-r-')) {
-                    $options->questionurl = $questionurl;
-                }
+            if (isset($question->workspaceid)) {
+                $options->workspaceid = $question->workspaceid;
+            }
+
+            if (isset($question->applicationid)) {
+                $options->applicationid = $question->applicationid;
+            }
+
+            if (isset($question->pageurl)) {
+                $options->pageurl = $question->pageurl;
             }
 
             if (isset($question->framewidth)) {
                 $options->framewidth = $question->framewidth;
             }
 
+            if (isset($question->frameheight)) {
+                $options->frameheight = $question->frameheight;
+            }
+
             /* add any more non combined feedback fields here */
 
             $options->id = $DB->insert_record('question_qlowcode', $options);
         }
+        $options->applicationurl = $applicationurl;
         $options = $this->save_combined_feedback_helper($options, $question, $question->context, true);
         $DB->update_record('question_qlowcode', $options);
 
         $this->save_hints($question);
     }
 
-    /* 
-     * populates fields such as combined feedback 
+    /*
+     * populates fields such as combined feedback
      * also make $DB calls to get data from other tables
      */
-    public function get_question_options($question)
-    {
-        //TODO
+    /**
+     * Get question options
+     *
+     * @param object $question
+     * @return false|void
+     */
+    public function get_question_options($question) {
         parent::get_question_options($question);
-
-        // Load combined feedback
+        // Load combined feedback.
         global $DB, $OUTPUT;
-        if (!$question->options = $DB->get_record('question_qlowcode', array('questionid' => $question->id))) {
+        if (!$question->options = $DB->get_record('question_qlowcode', ['questionid' => $question->id])) {
             echo $OUTPUT->notification('Error: Missing question options!');
             return false;
         }
-
     }
 
     /**
-     * executed at runtime (e.g. in a quiz or preview 
-     **/
-    protected function initialise_question_instance(question_definition $question, $questiondata)
-    {
+     * executed at runtime (e.g. in a quiz or preview
+     *
+     * @param question_definition $question
+     * @param object $questiondata
+     * @return void
+     */
+    protected function initialise_question_instance(question_definition $question, $questiondata) {
         parent::initialise_question_instance($question, $questiondata);
         $this->initialise_question_answers($question, $questiondata);
         parent::initialise_combined_feedback($question, $questiondata);
     }
 
-    public function initialise_question_answers(question_definition $question, $questiondata, $forceplaintextanswers = true)
-    {
-        //TODO
+    /**
+     * Initialize question
+     *
+     * @param question_definition $question
+     * @param string $questiondata
+     * @param bool $forceplaintextanswers
+     * @return void
+     */
+    public function initialise_question_answers(question_definition $question, $questiondata, $forceplaintextanswers = true) {
     }
 
-    public function import_from_xml($data, $question, qformat_xml $format, $extra = null)
-    {
+    /**
+     * Import from xml
+     *
+     * @param array $data
+     * @param object $question
+     * @param qformat_xml $format
+     * @param string $extra
+     * @return false|object
+     */
+    public function import_from_xml($data, $question, qformat_xml $format, $extra = null) {
         if (!isset($data['@']['type']) || $data['@']['type'] != 'question_qlowcode') {
             return false;
         }
@@ -144,27 +212,41 @@ class qtype_qlowcode extends question_type
         $format->import_hints($question, $data, true, false, $format->get_format($question->questiontextformat));
         return $question;
     }
-    public function export_to_xml($question, qformat_xml $format, $extra = null)
-    {
+
+    /**
+     * Export to xml
+     *
+     * @param object $question
+     * @param qformat_xml $format
+     * @param string $extra
+     * @return string
+     */
+    public function export_to_xml($question, qformat_xml $format, $extra = null) {
         global $CFG;
         $pluginmanager = core_plugin_manager::instance();
         $gapfillinfo = $pluginmanager->get_plugin_info('question_qlowcode');
         $output = parent::export_to_xml($question, $format);
-        //TODO
         $output .= $format->write_combined_feedback($question->options, $question->id, $question->contextid);
         return $output;
     }
 
-
-    public function get_random_guess_score($questiondata)
-    {
-        // TODO.
+    /**
+     * Random guess score
+     *
+     * @param string $questiondata
+     * @return int
+     */
+    public function get_random_guess_score($questiondata) {
         return 0;
     }
 
-    public function get_possible_responses($questiondata)
-    {
-        // TODO.
-        return array();
+    /**
+     * Possible responses
+     *
+     * @param string $questiondata
+     * @return array
+     */
+    public function get_possible_responses($questiondata) {
+        return [];
     }
 }

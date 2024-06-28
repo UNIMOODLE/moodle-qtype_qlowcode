@@ -31,28 +31,25 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace qtype_qlowcode\output;
+require_once(__DIR__ . '/../../../config.php');
 
-/**
- * Mobile output class for qlowcode question type
- */
-class mobile {
-    /**
-     * Returns the qlowcode question type for the quiz the mobile app.
-     *
-     * @return array
-     */
-    public static function mobile_get_qlowcode() {
-        global $CFG;
-        return [
-                'templates' => [
-                        [
-                                'id' => 'main',
-                                'html' => file_get_contents($CFG->dirroot .
-                                        '/question/type/qlowcode/mobile/addon-qtype-qlowcode.html'),
-                        ],
-                ],
-                'javascript' => file_get_contents($CFG->dirroot . '/question/type/qlowcode/mobile/mobile.js'),
-        ];
+use qtype_qlowcode\constants;
+use qtype_qlowcode\utils\qlc_utils;
+
+require_login();
+
+if (has_capability(constants::QLOW_ROLE_CAPABILITY_SSO, context_system::instance())) {
+    $pass = time();
+    if (qlc_utils::api_create_user($pass) == constants::QLOW_API_STATUS_OK) {
+        $url = qlc_utils::generate_url($pass);
+        redirect($url);
     }
 }
+
+$courseid = optional_param('id', 1, PARAM_INT);
+redirect(
+    new moodle_url('/course/view.php', ['id' => $courseid]),
+    get_string('sso_error', 'qtype_qlowcode'),
+    null,
+    \core\output\notification::NOTIFY_ERROR
+);

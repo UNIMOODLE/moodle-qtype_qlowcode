@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
+// This file is part of Moodle - https://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,19 +12,28 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+// Project implemented by the \"Recovery, Transformation and Resilience Plan.
+// Funded by the European Union - Next GenerationEU\".
+//
+// Produced by the UNIMOODLE University Group: Universities of
+// Valladolid, Complutense de Madrid, UPV/EHU, León, Salamanca,
+// Illes Balears, Valencia, Rey Juan Carlos, La Laguna, Zaragoza, Málaga,
+// Córdoba, Extremadura, Vigo, Las Palmas de Gran Canaria y Burgos.
 
 /**
- * Admin settings for the multichoice question type.
+ * Version details
  *
- * @package   qtype_multichoice
- * @copyright  2015 onwards Nadav Kavalerchik
+ * @package    qtype_qlowcode
+ * @copyright  2023 Proyecto UNIMOODLE
+ * @author     UNIMOODLE Group (Coordinator) <direccion.area.estrategia.digital@uva.es>
+ * @author     ISYC <soporte@isyc.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->libdir.'/validateurlsyntax.php');
+require_once($CFG->libdir . '/validateurlsyntax.php');
 
 /**
  * Admin settings class for the multichoice question type method.
@@ -35,9 +44,13 @@ require_once($CFG->libdir.'/validateurlsyntax.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class qtype_qlowcode_admin_setting_configtext_url extends admin_setting_configtext {
-
-    public function validate($data)
-    {
+    /**
+     * Validate data
+     *
+     * @param string $data
+     * @return lang_string|string|true
+     */
+    public function validate($data) {
         if (isset($data) && $data !== '') {
             if (validateUrlSyntax($data, $this->paramtype)) {
                 return true;
@@ -47,5 +60,4 @@ class qtype_qlowcode_admin_setting_configtext_url extends admin_setting_configte
         }
         return true;
     }
-
 }

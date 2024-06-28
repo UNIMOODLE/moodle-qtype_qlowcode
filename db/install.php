@@ -31,28 +31,23 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace qtype_qlowcode\output;
+use qtype_qlowcode\constants;
 
 /**
- * Mobile output class for qlowcode question type
+ * Custom code to be run on installing the plugin.
  */
-class mobile {
-    /**
-     * Returns the qlowcode question type for the quiz the mobile app.
-     *
-     * @return array
-     */
-    public static function mobile_get_qlowcode() {
-        global $CFG;
-        return [
-                'templates' => [
-                        [
-                                'id' => 'main',
-                                'html' => file_get_contents($CFG->dirroot .
-                                        '/question/type/qlowcode/mobile/addon-qtype-qlowcode.html'),
-                        ],
-                ],
-                'javascript' => file_get_contents($CFG->dirroot . '/question/type/qlowcode/mobile/mobile.js'),
-        ];
-    }
+function xmldb_qtype_qlowcode_install() {
+    global $CFG, $DB;
+    require_once($CFG->libdir . '/accesslib.php');
+    $id = create_role(constants::QLOW_ROLE_NAME, constants::QLOW_ROLE_SHORTNAME, 'SSO/Create apps');
+    set_role_contextlevels($id, [CONTEXT_SYSTEM]);
+    $context = context_system::instance();
+    $capability = new stdClass();
+    $capability->name = constants::QLOW_ROLE_CAPABILITY_SSO;
+    $capability->captype = 'read';
+    $capability->contextlevel = $context->id;
+    $capability->component = 'qtype_qlowcode';
+    $capability->riskbitmask = 0;
+    $DB->insert_record('capabilities', $capability, false);
+    assign_capability(constants::QLOW_ROLE_CAPABILITY_SSO, CAP_ALLOW, $id, $context->id, true);
 }

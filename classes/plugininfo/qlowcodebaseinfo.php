@@ -31,28 +31,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace qtype_qlowcode\output;
+namespace qtype_qlowcode\plugininfo;
+
+use core\plugininfo\qtype;
 
 /**
- * Mobile output class for qlowcode question type
+ * Plugin information class for the qlowcode base plugin
  */
-class mobile {
-    /**
-     * Returns the qlowcode question type for the quiz the mobile app.
-     *
-     * @return array
-     */
-    public static function mobile_get_qlowcode() {
-        global $CFG;
-        return [
-                'templates' => [
-                        [
-                                'id' => 'main',
-                                'html' => file_get_contents($CFG->dirroot .
-                                        '/question/type/qlowcode/mobile/addon-qtype-qlowcode.html'),
-                        ],
-                ],
-                'javascript' => file_get_contents($CFG->dirroot . '/question/type/qlowcode/mobile/mobile.js'),
-        ];
-    }
+class qlowcodebaseinfo extends qtype {
 }

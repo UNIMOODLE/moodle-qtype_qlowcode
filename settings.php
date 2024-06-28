@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
+// This file is part of Moodle - https://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,57 +12,63 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+// Project implemented by the \"Recovery, Transformation and Resilience Plan.
+// Funded by the European Union - Next GenerationEU\".
+//
+// Produced by the UNIMOODLE University Group: Universities of
+// Valladolid, Complutense de Madrid, UPV/EHU, León, Salamanca,
+// Illes Balears, Valencia, Rey Juan Carlos, La Laguna, Zaragoza, Málaga,
+// Córdoba, Extremadura, Vigo, Las Palmas de Gran Canaria y Burgos.
 
 /**
- * Plugin administration pages are defined here.
+ * Version details
  *
- * @package     
- * @category    
- * @copyright   
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    qtype_qlowcode
+ * @copyright  2023 Proyecto UNIMOODLE
+ * @author     UNIMOODLE Group (Coordinator) <direccion.area.estrategia.digital@uva.es>
+ * @author     ISYC <soporte@isyc.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+use qtype_qlowcode\constants;
 
 defined('MOODLE_INTERNAL') || die();
 
 if ($ADMIN->fulltree) {
-
-    // SECURITY SECTION
-
-    $settings->add(new admin_setting_heading('qtype_qlowcode/security', 
-        get_string('security', 'qtype_qlowcode'), 
-        get_string('securityhelp', 'qtype_qlowcode')));
-
-    $settings->add(new admin_setting_configtext('qtype_qlowcode/privatekey',
-        get_string('privatekey', 'qtype_qlowcode'), get_string('privatekeyhelp', 'qtype_qlowcode'), 
-        null));  
-    
-    $settings->add(new admin_setting_configtext('qtype_qlowcode/publickey',
-        get_string('publickey', 'qtype_qlowcode'), get_string('publickeyhelp', 'qtype_qlowcode'), 
-        null));     
-
-    // QUESTIONNAIRE SECTION
-        
-    $settings->add(new admin_setting_heading('qtype_qlowcode/questionnaire', 
-        get_string('questionnaire', 'qtype_qlowcode'), 
-        get_string('questionnairehelp', 'qtype_qlowcode')));
-
-    // QUESTIONNAIRES
-    
-    foreach (range(1, 5) as $number) {
-
-        $settings->add(new admin_setting_description("qtype_qlowcode/questionnaire$number",
-            get_string('questionnaire', 'qtype_qlowcode') . " $number", ''
-        ));
-        $settings->add(new admin_setting_configtext("qtype_qlowcode/description$number",
-            get_string('description', 'qtype_qlowcode'), get_string('descriptionhelp', 'qtype_qlowcode'),
-            null, PARAM_RAW_TRIMMED
-        ));
-        $settings->add(new qtype_qlowcode_admin_setting_configtext_url("qtype_qlowcode/url$number",
-            get_string('url', 'qtype_qlowcode'), get_string('urlhelp', 'qtype_qlowcode'),
-            null, 's+u-a+p-f?q-r-'
+    foreach (range(1, constants::QLOW_NUMBER_REPOSITORY) as $number) {
+        $settings->add(new admin_setting_heading(
+            "qtype_qlowcode/applicationurl$number",
+            get_string('applicationurl', 'qtype_qlowcode', ['number' => '']),
+            ''
         ));
 
+        $settings->add(new admin_setting_configtext(
+            "qtype_qlowcode/description$number",
+            get_string('description', 'qtype_qlowcode'),
+            get_string('descriptionhelp', 'qtype_qlowcode'),
+            null,
+            PARAM_RAW_TRIMMED
+        ));
+        $settings->add(new qtype_qlowcode_admin_setting_configtext_url(
+            "qtype_qlowcode/qlowurl$number",
+            get_string('qlowurl', 'qtype_qlowcode'),
+            get_string('qlowurlhelp', 'qtype_qlowcode'),
+            null,
+            's+u?a+p?f?q-r-'
+        ));
+        $settings->add(new qtype_qlowcode_admin_setting_configtext_url(
+            "qtype_qlowcode/apiurl$number",
+            get_string('apiurl', 'qtype_qlowcode'),
+            get_string('apiurlhelp', 'qtype_qlowcode'),
+            null,
+            's+u?a+p?f?q-r-'
+        ));
+        $settings->add(new admin_setting_configpasswordunmask(
+            "qtype_qlowcode/apitoken$number",
+            get_string('apitoken', 'qtype_qlowcode'),
+            get_string('apitokenhelp', 'qtype_qlowcode'),
+            ''
+        ));
     }
-
 }

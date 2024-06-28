@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
+// This file is part of Moodle - https://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,35 +12,49 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+// Project implemented by the \"Recovery, Transformation and Resilience Plan.
+// Funded by the European Union - Next GenerationEU\".
+//
+// Produced by the UNIMOODLE University Group: Universities of
+// Valladolid, Complutense de Madrid, UPV/EHU, León, Salamanca,
+// Illes Balears, Valencia, Rey Juan Carlos, La Laguna, Zaragoza, Málaga,
+// Córdoba, Extremadura, Vigo, Las Palmas de Gran Canaria y Burgos.
 
 /**
- * Strings for component 'qtype_qlowcode', language 'en', branch 'MOODLE_20_STABLE'
+ * Version details
  *
- * @package    qtype
- * @subpackage qlowcode
- * @copyright  2023 ISYC
-
+ * @package    qtype_qlowcode
+ * @copyright  2023 Proyecto UNIMOODLE
+ * @author     UNIMOODLE Group (Coordinator) <direccion.area.estrategia.digital@uva.es>
+ * @author     ISYC <soporte@isyc.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-$string['pluginname'] = 'qlowcode';
+
+$string['pluginname'] = 'ClozeScript';
 $string['pluginname_help'] = 'Create a qlowcode question type with insert question description here.';
 $string['pluginname_link'] = 'question/type/qlowcode';
 $string['pluginnameadding'] = 'Adding a qlowcode question';
 $string['pluginnameediting'] = 'Editing a qlowcode question';
-$string['pluginnamesummary'] = 'A qlowcode question type that allows something to be done that can test a student on some understanding.';
-$string['url'] = 'URL';
-$string['urlhelp'] = '';
+$string['pluginnamesummary'] = 'A "qlowcode" question type allows you to develop logic that can assess a student\'s understanding.';
 $string['rightanswer'] = 'The correct answer is';
 $string['pleasecompleteanswer'] = 'Please complete the answer';
 $string['empty'] = 'Empty';
 
 $string['question'] = 'Question';
 $string['questionhelp'] = '';
-$string['question_help'] = 'Question linked to the questionnaire. String consisting of alphanumeric values including subtraction (-) and underscore (_)';
+$string['question_help'] =
+        'Question linked to the applicationurl. String consisting of alphanumeric values including subtraction (-) and underscore (_)';
 
 $string['description'] = 'Description';
 $string['descriptionhelp'] = '';
+
+$string['qlowurl'] = 'URL';
+$string['qlowurlhelp'] = '';
+$string['apiurl'] = 'API URL';
+$string['apiurlhelp'] = '';
+$string['apitoken'] = 'API Token';
+$string['apitokenhelp'] = '';
 
 $string['security'] = 'Security';
 $string['securityhelp'] = 'Security parameters';
@@ -57,9 +71,6 @@ $string['securecodehelp'] = '';
 $string['encryptionservice'] = 'Encryption service';
 $string['encryptionservicehelp'] = '';
 
-$string['questionnaire'] = 'Questionnaire';
-$string['questionnairehelp'] = 'Sources of the Questionnaire';
-
 $string['path'] = 'Path';
 $string['pathhelp'] = '';
 $string['path_help'] = 'RFC 3986 - Uniform Resource Identifier (URI): Generic Syntax. Section 3.3. Path';
@@ -70,6 +81,26 @@ $string['externalservicenamehelp'] = '';
 $string['token'] = 'Token';
 $string['tokenhelp'] = '';
 
+$string['required'] = 'Required';
+$string['SSO'] = 'Qlowcode';
+$string['configurl'] = 'Installation';
+$string['workspaceid'] = 'Workspace';
+$string['selectworkspaceid'] = '--Select an workspace--';
+$string['applicationid'] = 'Application';
+$string['selectapplicationid'] = '--Select an application--';
+$string['applicationurl'] = 'Repository {$a->number}';
+$string['pageurl'] = 'Question';
+$string['selectpageurl'] = '--Select a question--';
+
 $string['framewidth'] = 'Frame width';
 $string['framewidthhelp'] = '';
 $string['framewidth_help'] = 'Positive numbers with optional percent symbol. Example: {45%, 320, 90.5%}';
+
+$string['frameheight'] = 'Frame height';
+$string['frameheighthelp'] = '';
+$string['frameheight_help'] = 'Positive numbers with optional percent symbol. Example: {45%, 320, 90.5%}';
+
+$string['qlowcode:access'] = 'Access to Qlowcode';
+$string['sso_error'] = 'Qlowcode Access error';
+$string['invalidsettings'] = 'You must configure qlowcode settings';
+$string['curlerror'] = 'Error connecting to qlowcode';

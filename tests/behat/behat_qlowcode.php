@@ -31,28 +31,38 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace qtype_qlowcode\output;
+require_once(__DIR__ . '/../../../../../lib/behat/behat_base.php');
 
 /**
- * Mobile output class for qlowcode question type
+ * Contains the helper class for the select missing words question type tests.
  */
-class mobile {
+class behat_qlowcode extends behat_base {
     /**
-     * Returns the qlowcode question type for the quiz the mobile app.
+     * Click on autocomplete section
      *
-     * @return array
+     * @When I click the autocomplete selection
      */
-    public static function mobile_get_qlowcode() {
-        global $CFG;
-        return [
-                'templates' => [
-                        [
-                                'id' => 'main',
-                                'html' => file_get_contents($CFG->dirroot .
-                                        '/question/type/qlowcode/mobile/addon-qtype-qlowcode.html'),
-                        ],
-                ],
-                'javascript' => file_get_contents($CFG->dirroot . '/question/type/qlowcode/mobile/mobile.js'),
-        ];
+    public function i_click_the_autocomplete_selection() {
+        $page = $this->getSession()->getPage();
+
+        // Encuentra el div por su clase.
+        $autocompletediv = $page->find('css', '.form-autocomplete-selection');
+
+        if (null === $autocompletediv) {
+            throw new \Exception('Div with class "form-autocomplete-selection" not found');
+        }
+
+        // Hacer clic en el div.
+        $autocompletediv->click();
+    }
+
+    /**
+     * Click on element with class name
+     * @When /^I click on the element with classname "([^"]*)"$/
+     *
+     * @param string $class
+     */
+    public function i_click_on_the_element_with_class_name($class) {
+        $this->getSession()->getPage()->find('css', '.' . $class)->click();
     }
 }

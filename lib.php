@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
+// This file is part of Moodle - https://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,26 +12,30 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+// Project implemented by the \"Recovery, Transformation and Resilience Plan.
+// Funded by the European Union - Next GenerationEU\".
+//
+// Produced by the UNIMOODLE University Group: Universities of
+// Valladolid, Complutense de Madrid, UPV/EHU, León, Salamanca,
+// Illes Balears, Valencia, Rey Juan Carlos, La Laguna, Zaragoza, Málaga,
+// Córdoba, Extremadura, Vigo, Las Palmas de Gran Canaria y Burgos.
 
 /**
- * Serve question type files
+ * Version details
  *
- * @since      2.0
  * @package    qtype_qlowcode
- * @copyright  2023 ISYC
-
+ * @copyright  2023 Proyecto UNIMOODLE
+ * @author     UNIMOODLE Group (Coordinator) <direccion.area.estrategia.digital@uva.es>
+ * @author     ISYC <soporte@isyc.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
-defined('MOODLE_INTERNAL') || die();
-
+use qtype_qlowcode\constants;
 
 /**
  * Checks file access for qlowcode questions.
- * @package  qtype_qlowcode
- * @category files
+ *
  * @param stdClass $course course object
  * @param stdClass $cm course module object
  * @param stdClass $context context object
@@ -40,9 +44,34 @@ defined('MOODLE_INTERNAL') || die();
  * @param bool $forcedownload whether or not force download
  * @param array $options additional options affecting the file serving
  * @return bool
+ * @package  qtype_qlowcode
+ * @category files
  */
-function qtype_qlowcode_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
+function qtype_qlowcode_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = []) {
     global $DB, $CFG;
     require_once($CFG->libdir . '/questionlib.php');
     question_pluginfile($course, $context, 'qtype_qlowcode', $filearea, $args, $forcedownload, $options);
+}
+
+/**
+ * Navigation node
+ *
+ * @param navigation_node $parentnode
+ * @param stdClass $course
+ * @param context_course $context
+ * @return void
+ * @throws moodle_exception
+ */
+function qtype_qlowcode_extend_navigation_course(navigation_node $parentnode, stdClass $course, context_course $context) {
+    global $CFG;
+
+    if (has_capability(constants::QLOW_ROLE_CAPABILITY_SSO, $context)) {
+        $parentnode->add(
+            get_string('SSO', 'qtype_qlowcode'),
+            new moodle_url($CFG->wwwroot . '/question/type/qlowcode/sso.php', ['id' => $course->id]),
+            navigation_node::TYPE_SETTING,
+            null,
+            'qlowcode'
+        );
+    }
 }

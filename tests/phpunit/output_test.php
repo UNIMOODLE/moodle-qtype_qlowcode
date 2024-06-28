@@ -31,28 +31,32 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace qtype_qlowcode\output;
+namespace qtype_qlowcode;
+
+use qtype_qlowcode\output\mobile;
 
 /**
- * Mobile output class for qlowcode question type
+ * Tests for output.
+ *
  */
-class mobile {
+class output_test extends \advanced_testcase {
+    public function setUp(): void {
+        parent::setUp();
+        $this->resetAfterTest(true);
+    }
+
     /**
-     * Returns the qlowcode question type for the quiz the mobile app.
+     * Check output functions works successfully
      *
-     * @return array
+     *
+     * @package    qtype
+     * @copyright  2023 ISYC
+     * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+     * @covers       \qtype_qlowcode\output\mobile::mobile_get_qlowcode
      */
-    public static function mobile_get_qlowcode() {
-        global $CFG;
-        return [
-                'templates' => [
-                        [
-                                'id' => 'main',
-                                'html' => file_get_contents($CFG->dirroot .
-                                        '/question/type/qlowcode/mobile/addon-qtype-qlowcode.html'),
-                        ],
-                ],
-                'javascript' => file_get_contents($CFG->dirroot . '/question/type/qlowcode/mobile/mobile.js'),
-        ];
+
+    public function test_output() {
+        $this->assertNotNull(mobile::mobile_get_qlowcode());
+        $this->assertIsArray(mobile::mobile_get_qlowcode());
     }
 }

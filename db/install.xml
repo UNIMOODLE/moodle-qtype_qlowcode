@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="question/type/qlowcode/db" VERSION="20231005" COMMENT="XMLDB file for Moodle question/type/qlowcode"
+<XMLDB PATH="question/type/qlowcode/db" VERSION="20231025" COMMENT="XMLDB file for Moodle question/type/qlowcode"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../../lib/xmldb/xmldb.xsd"
 >
@@ -8,8 +8,13 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="questionid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Foreign key references question.id"/>
-        <FIELD NAME="questionurl" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="configurl" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="configurl"/>
+        <FIELD NAME="workspaceid" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="applicationid" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="applicationurl" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="pageurl" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="framewidth" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Frame width"/>
+        <FIELD NAME="frameheight" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Frame height"/>
         <FIELD NAME="correctfeedback" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="correctfeedbackformat" TYPE="int" LENGTH="2" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="partiallycorrectfeedback" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
@@ -32,6 +37,8 @@
         <FIELD NAME="response" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="User response"/>
         <FIELD NAME="equation" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Equation"/>
         <FIELD NAME="resultcorrect" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="seckey" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Security key"/>
+        <FIELD NAME="mask" TYPE="int" LENGTH="20" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Action mask"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
