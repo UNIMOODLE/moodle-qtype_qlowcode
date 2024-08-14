@@ -32,57 +32,48 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-use qtype_qlowcode\utils\qlc_utils;
+use qtype_qlowcode\ws\endpoint;
+use qtype_qlowcode\ws\qlc_get_applications;
+use qtype_qlowcode\ws\qlc_get_pages;
+use qtype_qlowcode\ws\qlc_get_workspaces;
 
 $functions = [
     // The name of your web service function, as discussed above.
-        'qtype_qlowcode_endpoint' => [
-            // The name of the namespaced class that the function is located in.
-                'classname' => 'endpoint',
-
-            // A brief, human-readable, description of the web service function.
-                'description' => 'Endpoint.',
-
-            // Options include read, and write.
-                'type' => 'read',
-
-            // Whether the service is available for use in AJAX calls from the web.
-                'ajax' => true,
-
-            // An optional list of services where the function will be included.
-                'services' => [
-                    // A standard Moodle install includes one default service:
-                    // - MOODLE_OFFICIAL_MOBILE_SERVICE.
-                    // Specifying this service means that your function will be available for
-                    // use in the Moodle Mobile App.
-                        MOODLE_OFFICIAL_MOBILE_SERVICE,
-                ],
+    'qtype_qlowcode_endpoint' => [
+        'classname' => endpoint::class,
+        'methodname' => 'execute',
+        'description' => 'Endpoint.',
+        'type' => 'read',
+        'ajax' => true,
+        'services' => [
+            MOODLE_OFFICIAL_MOBILE_SERVICE,
         ],
-        'qtype_qlowcode_get_workspaces' => [
-                'classname' => qlc_utils::class,
-                'methodname' => 'get_workspaces',
-                'description' => 'Get workspaces from Qlowcode.',
-                'type' => 'read',
-                'ajax' => true,
-                'capabilities' => '',
-                'loginrequired' => true,
-        ],
-        'qtype_qlowcode_get_applications' => [
-                'classname' => qlc_utils::class,
-                'methodname' => 'get_applications',
-                'description' => 'Get applications from Qlowcode.',
-                'type' => 'read',
-                'ajax' => true,
-                'capabilities' => '',
-                'loginrequired' => true,
-        ],
-        'qtype_qlowcode_get_pages' => [
-                'classname' => qlc_utils::class,
-                'methodname' => 'get_pages',
-                'description' => 'Get pages from Qlowcode.',
-                'type' => 'read',
-                'ajax' => true,
-                'capabilities' => '',
-                'loginrequired' => true,
-        ],
+    ],
+    'qtype_qlowcode_get_workspaces' => [
+        'classname' => qlc_get_workspaces::class,
+        'methodname' => 'get_workspaces',
+        'description' => 'Get workspaces from Qlowcode.',
+        'type' => 'read',
+        'ajax' => true,
+        'capabilities' => '',
+        'loginrequired' => true,
+    ],
+    'qtype_qlowcode_get_applications' => [
+        'classname' => qlc_get_applications::class,
+        'methodname' => 'get_applications',
+        'description' => 'Get applications from Qlowcode.',
+        'type' => 'read',
+        'ajax' => true,
+        'capabilities' => '',
+        'loginrequired' => true,
+    ],
+    'qtype_qlowcode_get_pages' => [
+        'classname' => qlc_get_pages::class,
+        'methodname' => 'get_pages',
+        'description' => 'Get pages from Qlowcode.',
+        'type' => 'read',
+        'ajax' => true,
+        'capabilities' => '',
+        'loginrequired' => true,
+    ],
 ];

@@ -25,6 +25,9 @@ namespace qtype_qlowcode;
 
 use Generator;
 use qtype_qlowcode\utils\qlc_utils;
+use qtype_qlowcode\ws\qlc_get_workspaces;
+use qtype_qlowcode\ws\qlc_get_applications;
+use qtype_qlowcode\ws\qlc_get_pages;
 
 /**
  * Check util functions works successfully
@@ -146,30 +149,30 @@ class utils_test extends \advanced_testcase {
     /**
      * Check get workspaces
      *
-     * @covers \qtype_qlowcode\utils\qlc_utils::get_workspaces
+     * @covers \qtype_qlowcode\ws\qlc_get_workspaces::get_workspaces
      *
      */
     public function test_getworkspaces() {
-        $this->assertIsArray(qlc_utils::get_workspaces(constants::QLOW_DEFAULT_REPOSITORY));
+        $this->assertIsArray(qlc_get_workspaces::get_workspaces(constants::QLOW_DEFAULT_REPOSITORY));
     }
 
     /**
      * Check get applications
      *
-     * @covers \qtype_qlowcode\utils\qlc_utils::get_applications
+     * @covers \qtype_qlowcode\ws\qlc_get_applications::get_applications
      *
      */
     public function test_getapplications() {
-        $this->assertIsArray(qlc_utils::get_applications(constants::QLOW_DEFAULT_REPOSITORY, self::DEFAULT_WORKSPACE));
+        $this->assertIsArray(qlc_get_applications::get_applications(constants::QLOW_DEFAULT_REPOSITORY, self::DEFAULT_WORKSPACE));
     }
 
     /**
      * Check get pages
      *
-     * @covers \qtype_qlowcode\utils\qlc_utils::get_pages
+     * @covers \qtype_qlowcode\ws\qlc_get_pages::get_pages
      *
      */
     public function test_getpages() {
-        $this->assertIsArray(qlc_utils::get_pages(constants::QLOW_DEFAULT_REPOSITORY, self::DEFAULT_APPLICATION));
+        $this->assertIsArray(qlc_get_pages::get_pages(constants::QLOW_DEFAULT_REPOSITORY, self::DEFAULT_APPLICATION));
     }
 }

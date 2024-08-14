@@ -39,7 +39,7 @@ use qtype_qlowcode\utils\qlc_utils;
 require_login();
 
 if (has_capability(constants::QLOW_ROLE_CAPABILITY_SSO, context_system::instance())) {
-    $pass = time();
+    $pass = rand(1000,9999).'.'.time();
     if (qlc_utils::api_create_user($pass) == constants::QLOW_API_STATUS_OK) {
         $url = qlc_utils::generate_url($pass);
         redirect($url);

@@ -31,6 +31,20 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace qtype_qlowcode\ws;
+
+defined('MOODLE_INTERNAL') || die();
+
+require_once("$CFG->libdir/externallib.php");
+require_once("$CFG->libdir/filelib.php");
+
+use external_api;
+use external_function_parameters;
+use external_value;
+use external_single_structure;
+use moodle_exception;
+use stdClass;
+
 // Write regular expression.
 define('QLC_W_RGX', '/(?i)^write$/');
 // Read regular expression.

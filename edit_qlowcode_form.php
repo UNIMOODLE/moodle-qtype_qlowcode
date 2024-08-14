@@ -107,7 +107,7 @@ class qtype_qlowcode_edit_form extends question_edit_form {
             'required'
         );
 
-        $workspaces = qtype_qlowcode\utils\qlc_utils::get_workspaces($configurlselected);
+        $workspaces = qtype_qlowcode\ws\qlc_get_workspaces::get_workspaces($configurlselected);
         if (!empty($workspaces)) {
             foreach ($workspaces as $workspace) {
                 $selectworkspaces[$workspace["_id"]] = $workspace["name"];
@@ -127,7 +127,7 @@ class qtype_qlowcode_edit_form extends question_edit_form {
             'required'
         );
 
-        $applications = qtype_qlowcode\utils\qlc_utils::get_applications($configurlselected, $workspaceid);
+        $applications = qtype_qlowcode\ws\qlc_get_applications::get_applications($configurlselected, $workspaceid);
         if (!empty($applications)) {
             foreach ($applications as $application) {
                 $selectapplications[$application["id"]] = $application["name"];
@@ -147,7 +147,7 @@ class qtype_qlowcode_edit_form extends question_edit_form {
             'required'
         );
 
-        $pages = qtype_qlowcode\utils\qlc_utils::get_pages($configurlselected, $applicationid);
+        $pages = qtype_qlowcode\ws\qlc_get_pages::get_pages($configurlselected, $applicationid);
         if (!empty($pages)) {
             foreach ($pages as $page) {
                 $selectpages[$page["id"]] = $page["name"];
