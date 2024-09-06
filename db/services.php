@@ -32,10 +32,10 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-use qtype_qlowcode\ws\endpoint;
-use qtype_qlowcode\ws\qlc_get_applications;
-use qtype_qlowcode\ws\qlc_get_pages;
-use qtype_qlowcode\ws\qlc_get_workspaces;
+use qtype_qlowcode\external\endpoint;
+use qtype_qlowcode\external\qlc_get_applications;
+use qtype_qlowcode\external\qlc_get_pages;
+use qtype_qlowcode\external\qlc_get_workspaces;
 
 $functions = [
     // The name of your web service function, as discussed above.

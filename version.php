@@ -34,6 +34,6 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'qtype_qlowcode';
-$plugin->version = 2024081401;
+$plugin->version = 2024090500;
 $plugin->requires = 2022041900;
 $plugin->maturity = MATURITY_ALPHA;

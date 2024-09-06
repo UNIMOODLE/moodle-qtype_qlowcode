@@ -99,7 +99,7 @@ class qtype_qlowcode extends question_type {
 
         $applicationurl = null;
         if (isset($question->configurl) && isset($question->workspaceid) && isset($question->applicationid)) {
-            $applications = qtype_qlowcode\ws\qlc_get_applications::get_applications($question->configurl, $question->workspaceid);
+            $applications = qtype_qlowcode\external\qlc_get_applications::get_applications($question->configurl, $question->workspaceid);
             if (!empty($applications)) {
                 foreach ($applications as $application) {
                     if ($application["id"] == $question->applicationid) {

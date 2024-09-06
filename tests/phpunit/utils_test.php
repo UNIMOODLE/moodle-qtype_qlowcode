@@ -35,9 +35,9 @@ namespace qtype_qlowcode;
 
 use Generator;
 use qtype_qlowcode\utils\qlc_utils;
-use qtype_qlowcode\ws\qlc_get_workspaces;
-use qtype_qlowcode\ws\qlc_get_applications;
-use qtype_qlowcode\ws\qlc_get_pages;
+use qtype_qlowcode\external\qlc_get_workspaces;
+use qtype_qlowcode\external\qlc_get_applications;
+use qtype_qlowcode\external\qlc_get_pages;
 
 /**
  * Check util functions works successfully
@@ -159,7 +159,7 @@ class utils_test extends \advanced_testcase {
     /**
      * Check get workspaces
      *
-     * @covers \qtype_qlowcode\ws\qlc_get_workspaces::get_workspaces
+     * @covers \qtype_qlowcode\external\qlc_get_workspaces::get_workspaces
      *
      */
     public function test_getworkspaces() {
@@ -169,7 +169,7 @@ class utils_test extends \advanced_testcase {
     /**
      * Check get applications
      *
-     * @covers \qtype_qlowcode\ws\qlc_get_applications::get_applications
+     * @covers \qtype_qlowcode\external\qlc_get_applications::get_applications
      *
      */
     public function test_getapplications() {
@@ -179,7 +179,7 @@ class utils_test extends \advanced_testcase {
     /**
      * Check get pages
      *
-     * @covers \qtype_qlowcode\ws\qlc_get_pages::get_pages
+     * @covers \qtype_qlowcode\external\qlc_get_pages::get_pages
      *
      */
     public function test_getpages() {
