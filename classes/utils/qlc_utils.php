@@ -125,32 +125,6 @@ class qlc_utils
         $params = '?username=' . $USER->email . '&token=' . $pass;
 
         return $completeurl . constants::QLOW_API_URL . $params;
-
-        // ----------------------------
-
-        // $response = false;
-
-        // $url = get_config('qtype_qlowcode', "qlowurl" . constants::QLOW_DEFAULT_REPOSITORY);
-        // $completeurl = rtrim($url, ':809');
-        // if (empty($completeurl)) {
-        //     throw new moodle_exception(get_string('invalidsettings', 'qtype_qlowcode'));
-        // }
-        // $apitoken = get_config('qtype_qlowcode', "apitoken" . constants::QLOW_DEFAULT_REPOSITORY);
-        // if (empty($apitoken)) {
-        //     throw new moodle_exception(get_string('invalidsettings', 'qtype_qlowcode'));
-        // }
-
-        // try {
-        //     $curl = new curl();
-        //     $curl->setHeader(['qlctoken: ' . $apitoken]);
-        //     $params = http_build_query(['username' => $USER->email, 'password' => $pass], '', '&');
-        //     var_dump($completeurl);
-        //     $response = $curl->post($completeurl . '/api/v1/login', $params);
-        //     var_dump($response);exit();
-        //     return $response;
-        // } catch (Exception $e) {
-        //     throw new moodle_exception('One or more of the dates provided were invalid');
-        // }
     }
 
     public static function encrypt($data)
