@@ -52,9 +52,6 @@ class qtype_qlowcode_renderer extends qtype_renderer {
     ) {
         global $CFG, $USER, $DB;
 
-        $this->page->requires->js(new moodle_url('/question/type/qlowcode/javascript/jquery-3.7.0.min.js'));
-        $this->page->requires->js(new moodle_url('/question/type/qlowcode/javascript/qlowcode.js'));
-
         $lang = current_language();
         $qaid = $qa->get_database_id();
         $userid = $USER->id;
