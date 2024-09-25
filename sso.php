@@ -39,9 +39,20 @@ use qtype_qlowcode\utils\qlc_utils;
 require_login();
 
 if (has_capability(constants::QLOW_ROLE_CAPABILITY_SSO, context_system::instance())) {
-    $pass = rand(1000,9999).'.'.time();
+    global $USER;
+
+    $pass = time();
     if (qlc_utils::api_create_user($pass) == constants::QLOW_API_STATUS_OK) {
         $url = qlc_utils::generate_url($pass);
+
+        // Task to queue
+        $task = new \qtype_qlowcode\task\qlowcode_change_password();
+        $task->set_custom_data(array(
+            'userid' => $USER->id,
+        ));
+        // Queue the task for the next run.
+        \core\task\manager::queue_adhoc_task($task);
+        
         redirect($url);
     }
 }

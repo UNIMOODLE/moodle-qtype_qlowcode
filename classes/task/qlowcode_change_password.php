@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - https://moodle.org/
+// This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,9 +12,10 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
-// Project implemented by the \"Recovery, Transformation and Resilience Plan.
-// Funded by the European Union - Next GenerationEU\".
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+// Project implemented by the "Recovery, Transformation and Resilience Plan.
+// Funded by the European Union - Next GenerationEU".
 //
 // Produced by the UNIMOODLE University Group: Universities of
 // Valladolid, Complutense de Madrid, UPV/EHU, León, Salamanca,
@@ -22,8 +23,6 @@
 // Córdoba, Extremadura, Vigo, Las Palmas de Gran Canaria y Burgos.
 
 /**
- * Version details
- *
  * @package    qtype_qlowcode
  * @copyright  2023 Proyecto UNIMOODLE
  * @author     UNIMOODLE Group (Coordinator) <direccion.area.estrategia.digital@uva.es>
@@ -31,9 +30,26 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace qtype_qlowcode\task;
 
-$plugin->component = 'qtype_qlowcode';
-$plugin->version = 2024092301;
-$plugin->requires = 2022041900;
-$plugin->maturity = MATURITY_ALPHA;
+defined('MOODLE_INTERNAL') || die();
+/**
+ * Class hqlowcode_change_password.
+ *
+ */
+class qlowcode_change_password extends \core\task\adhoc_task {
+
+    /**
+     * Run the deletion task.
+     *
+     * @throws \coding_exception if the module could not be removed.
+     */
+    public function execute() {
+        $event = \qtype_qlowcode\event\sso_redirected::create([
+            'context' => \context_system::instance(),
+            'relateduserid' => $this->get_custom_data()->userid
+        ]);
+
+        $event->trigger();
+    }
+}

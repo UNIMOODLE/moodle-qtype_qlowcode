@@ -89,8 +89,8 @@ class qtype_qlowcode_question extends question_graded_automatically_with_countba
             $this->qaId = $response['qaId'];
             $this->userId = $response['userId'];
 
-            $sql = 'SELECT * FROM {question_qlowcode_temp} WHERE qaid = ? AND userid = ? AND mask != ?;';
-            $records = $DB->get_records_sql($sql, [$this->qaId, $this->userId, 0]);
+            $sql = 'SELECT * FROM {question_qlowcode_temp} WHERE qaid = :qaid AND userid = :userid AND mask != :mask';
+            $records = $DB->get_records_sql($sql, ['qaid' => $this->qaId, 'userid' => $this->userId, 'mask' => 0]);
 
             if ($records) {
                 $responses = [];
@@ -117,8 +117,8 @@ class qtype_qlowcode_question extends question_graded_automatically_with_countba
             $this->qaId = $response['qaId'];
             $this->userId = $response['userId'];
 
-            $sql = 'SELECT COUNT(*) FROM {question_qlowcode_temp} WHERE qaid = ? AND userid = ? AND mask != ?;';
-            $count = $DB->count_records_sql($sql, [$this->qaId, $this->userId, 0]);
+            $sql = 'SELECT COUNT(*) FROM {question_qlowcode_temp} WHERE qaid = :qaid AND userid = :userid AND mask != :mask';
+            $count = $DB->count_records_sql($sql, ['qaid' => $this->qaId, 'userid' => $this->userId, 'mask' => 0]);
 
             return $count;
         }
@@ -180,8 +180,8 @@ class qtype_qlowcode_question extends question_graded_automatically_with_countba
 
         // Use fields.
         if (isset($this->qaId) && isset($this->userId)) {
-            $sql = 'SELECT * FROM {question_qlowcode_temp} WHERE qaid = ? AND userid = ? AND mask != ?;';
-            $records = $DB->get_records_sql($sql, [$this->qaId, $this->userId, 0]);
+            $sql = 'SELECT * FROM {question_qlowcode_temp} WHERE qaid = :qaid AND userid = :userid AND mask != :mask';
+            $records = $DB->get_records_sql($sql, ['qaid' => $this->qaId, 'userid' => $this->userId, 'mask' => 0]);
 
             if ($records) {
                 $correctresponses = [];
@@ -254,8 +254,8 @@ class qtype_qlowcode_question extends question_graded_automatically_with_countba
             $this->qaId = $response['qaId'];
             $this->userId = $response['userId'];
 
-            $sql = 'SELECT * FROM {question_qlowcode_temp} WHERE qaid = ? AND userid = ? AND mask != ?;';
-            $records = $DB->get_records_sql($sql, [$this->qaId, $this->userId, 0]);
+            $sql = 'SELECT * FROM {question_qlowcode_temp} WHERE qaid = :qaid AND userid = :userid AND mask != :mask';
+            $records = $DB->get_records_sql($sql, ['qaid' => $this->qaId, 'userid' => $this->userId, 'mask' => 0]);
 
             if ($records) {
                 $count = 0;
@@ -309,8 +309,8 @@ class qtype_qlowcode_question extends question_graded_automatically_with_countba
         foreach ($responses as $response) {
             $fraction = 0;
             if (array_key_exists('qaId', $response) && array_key_exists('userId', $response)) {
-                $sql = 'SELECT COUNT(*) FROM {question_qlowcode_temp} WHERE qaid = ? AND userid = ? AND mask != ?;';
-                $records = $DB->get_records_sql($sql, [$response['qaId'], $response['userId'], 0]);
+                $sql = 'SELECT * FROM {question_qlowcode_temp} WHERE qaid = :qaid AND userid = :userid AND mask != :mask';
+                $records = $DB->get_records_sql($sql, ['qaid' => $response['qaId'], 'userid' => $response['userId'], 'mask' => 0]);
 
                 if ($records) {
                     $count = 0;

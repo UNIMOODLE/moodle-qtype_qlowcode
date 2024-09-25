@@ -81,9 +81,15 @@ class qlc_utils
      * @param string $pass
      * @return bool|string
      */
-    public static function api_create_user($pass)
+    public static function api_create_user($pass, $userid = "")
     {
         global $USER;
+
+        $user = (empty($userid) ? $USER : \core_user::get_user($userid, '*', MUST_EXIST));
+
+        if (empty($userid)) {
+            sleep(10);
+        }
 
         $response = false;
 
@@ -100,7 +106,7 @@ class qlc_utils
         try {
             $curl = new curl();
             $curl->setHeader(['qlctoken: ' . $apitoken]);
-            $params = http_build_query(['email' => $USER->email, 'password' => $pass], '', '&');
+            $params = http_build_query(['email' => $user->email, 'password' => $pass], '', '&');
             $response = $curl->post($completeurl . constants::QLOW_API_USERNEW, $params);
             return $response;
         } catch (Exception $e) {

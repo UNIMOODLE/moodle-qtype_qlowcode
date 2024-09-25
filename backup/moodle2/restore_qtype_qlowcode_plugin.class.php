@@ -99,9 +99,9 @@ class restore_qtype_qlowcode_plugin extends restore_qtype_plugin {
                SELECT bi.itemid, bi.newitemid, qt.qaid
                 FROM {backup_ids_temp} bi
                 JOIN {question_qlowcode_temp} qt ON bi.itemid = qt.id
-                 WHERE bi.backupid = ?
+                 WHERE bi.backupid = :backupid
                    AND bi.itemname = 'question_qlowcode_temp'
-                ", [$this->get_restoreid()]);
+                ", ['backupid' => $this->get_restoreid()]);
 
         foreach ($records as $record) {
             $newid = $this->get_mappingid('question_attempt', $record->qaid);

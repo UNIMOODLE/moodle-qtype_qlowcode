@@ -13,8 +13,9 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
-// Project implemented by the \"Recovery, Transformation and Resilience Plan.
-// Funded by the European Union - Next GenerationEU\".
+
+// Project implemented by the "Recovery, Transformation and Resilience Plan.
+// Funded by the European Union - Next GenerationEU".
 //
 // Produced by the UNIMOODLE University Group: Universities of
 // Valladolid, Complutense de Madrid, UPV/EHU, León, Salamanca,
@@ -22,8 +23,7 @@
 // Córdoba, Extremadura, Vigo, Las Palmas de Gran Canaria y Burgos.
 
 /**
- * Version details
- *
+ * Display information about all the qtype_qlowcode modules in the requested course. *
  * @package    qtype_qlowcode
  * @copyright  2023 Proyecto UNIMOODLE
  * @author     UNIMOODLE Group (Coordinator) <direccion.area.estrategia.digital@uva.es>
@@ -31,9 +31,14 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'qtype_qlowcode';
-$plugin->version = 2024092301;
-$plugin->requires = 2022041900;
-$plugin->maturity = MATURITY_ALPHA;
+// List of observers.
+$observers = [
+    [
+        'eventname'   => '\qtype_qlowcode\event\sso_redirected',
+        'callback'    => 'qtype_qlowcode_observer::sso_redirected',
+    ],
+
+];

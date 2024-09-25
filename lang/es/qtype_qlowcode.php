@@ -103,3 +103,5 @@ $string['qlowcode:access'] = 'Acceso a Qlowcode';
 $string['sso_error'] = 'Error de acceso a Qlowcode';
 $string['invalidsettings'] = 'Debe configurar las settings de qlowcode';
 $string['curlerror'] = 'Error al conectar con qlowcode';
+
+$string['sso_redirected'] = 'SSO Appsmith';

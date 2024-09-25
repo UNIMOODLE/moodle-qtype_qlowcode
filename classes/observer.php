@@ -13,8 +13,9 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
-// Project implemented by the \"Recovery, Transformation and Resilience Plan.
-// Funded by the European Union - Next GenerationEU\".
+
+// Project implemented by the "Recovery, Transformation and Resilience Plan.
+// Funded by the European Union - Next GenerationEU".
 //
 // Produced by the UNIMOODLE University Group: Universities of
 // Valladolid, Complutense de Madrid, UPV/EHU, León, Salamanca,
@@ -22,8 +23,7 @@
 // Córdoba, Extremadura, Vigo, Las Palmas de Gran Canaria y Burgos.
 
 /**
- * Version details
- *
+ * Display information about all the mod_hybridteaching modules in the requested course. *
  * @package    qtype_qlowcode
  * @copyright  2023 Proyecto UNIMOODLE
  * @author     UNIMOODLE Group (Coordinator) <direccion.area.estrategia.digital@uva.es>
@@ -31,9 +31,22 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+use qtype_qlowcode\utils\qlc_utils;
 
-$plugin->component = 'qtype_qlowcode';
-$plugin->version = 2024092301;
-$plugin->requires = 2022041900;
-$plugin->maturity = MATURITY_ALPHA;
+/**
+ * Class qtype_qlowcode_observer.
+ */
+class qtype_qlowcode_observer {
+
+    /**
+     * Observer for sso_redirected event
+     * Updates the users grade
+     *
+     * @param \qtype_qlowcode\event\sso_redirected $event The event to be processed
+     */
+    public static function sso_redirected(\qtype_qlowcode\event\sso_redirected $event) {
+        $pass = rand(0,100).time();
+        qlc_utils::api_create_user($pass, $event->relateduserid);
+    }
+
+}

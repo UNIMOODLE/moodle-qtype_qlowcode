@@ -235,8 +235,8 @@ class qtype_qlowcode_renderer extends qtype_renderer {
         $qaid = $qa->get_database_id();
         $userid = $USER->id;
 
-        $sql = 'SELECT * FROM {question_qlowcode_temp} WHERE qaid = ? AND userid = ? AND mask != ?;';
-        $records = $DB->get_records_sql($sql, [$qaid, $userid, 0]);
+        $sql = 'SELECT * FROM {question_qlowcode_temp} WHERE qaid = :qaid AND userid = :userid AND mask != :mask';
+        $records = $DB->get_records_sql($sql, ['qaid' => $qaid, 'userid' => $userid, 'mask' => 0]);
 
         if ($records) {
             $count = 0;
@@ -271,9 +271,9 @@ class qtype_qlowcode_renderer extends qtype_renderer {
 
         $qaid = $qa->get_database_id();
         $userid = $USER->id;
-
-        $sql = 'SELECT * FROM {question_qlowcode_temp} WHERE qaid = ? AND userid = ? AND mask != ?;';
-        $records = $DB->get_records_sql($sql, [$qaid, $userid, 0]);
+        
+        $sql = 'SELECT * FROM {question_qlowcode_temp} WHERE qaid = :qaid AND userid = :userid AND mask != :mask';
+        $records = $DB->get_records_sql($sql, ['qaid' => $qaid, 'userid' => $userid, 'mask' => 0]);
 
         $correctresponses = null;
         if ($records) {

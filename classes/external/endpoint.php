@@ -107,13 +107,7 @@ class endpoint extends external_api {
 
         $conditions = ['qaid' => $qaid, 'userid' => $userid, 'seckey' => $key];
 
-        $sql = 'SELECT * FROM {question_qlowcode_temp} WHERE ';
-        $sql .= 'qaid = :qaid AND userid = :userid AND ';
-        $sql .= $DB->sql_compare_text('seckey');
-        $sql .= ' = ';
-        $sql .= $DB->sql_compare_text(':seckey');
-
-        $record = $DB->get_record_sql($sql, $conditions);
+        $record = $DB->get_record('question_qlowcode_temp', $conditions);
 
         $answer = null;
 
@@ -178,13 +172,7 @@ class endpoint extends external_api {
 
         $conditions = ['qaid' => $qaid, 'userid' => $userid, 'seckey' => $key];
 
-        $sql = 'SELECT * FROM {question_qlowcode_temp} WHERE ';
-        $sql .= 'qaid = :qaid AND userid = :userid AND ';
-        $sql .= $DB->sql_compare_text('seckey');
-        $sql .= ' = ';
-        $sql .= $DB->sql_compare_text(':seckey');
-
-        $record = $DB->get_record_sql($sql, $conditions);
+        $record = $DB->get_record('question_qlowcode_temp', $conditions);
 
         $answer = null;
 
