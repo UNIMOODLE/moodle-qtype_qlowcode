@@ -27,21 +27,23 @@
         <KEY NAME="questionid" TYPE="foreign" FIELDS="questionid" REFTABLE="question" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="question_qlowcode_temp" COMMENT="description of table, e.g. options associated overall question">
+    <TABLE NAME="question_qlowcode_temp" COMMENT="Save the answers for each appsmith questions while the student does the quiz.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="qaid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Question attempt ID"/>
+        <FIELD NAME="qaid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="ID for table question_attempts ID"/>
         <FIELD NAME="userid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="User ID"/>
-        <FIELD NAME="eid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="eid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="equation id => last 8 digits (no letters) of the page url from appsmith"/>
         <FIELD NAME="score" TYPE="number" LENGTH="38" NOTNULL="true" SEQUENCE="false" DECIMALS="19" COMMENT="Score"/>
-        <FIELD NAME="response" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="User response"/>
-        <FIELD NAME="equation" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Equation"/>
-        <FIELD NAME="resultcorrect" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="seckey" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Security key"/>
-        <FIELD NAME="mask" TYPE="int" LENGTH="20" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Action mask"/>
+        <FIELD NAME="response" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="User response (answers)"/>
+        <FIELD NAME="equation" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Equation, json format, contains all config values and answers of student"/>
+        <FIELD NAME="resultcorrect" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Correct answers (from appsmith)"/>
+        <FIELD NAME="seckey" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Security key, unique for each user/question/page"/>
+        <FIELD NAME="mask" TYPE="int" LENGTH="20" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Action mask. 0 = no answers. 1 = contain answers"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="qaid fk" TYPE="foreign" FIELDS="qaid" REFTABLE="question_attempts" REFFIELDS="id"/>
+        <KEY NAME="userid fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
   </TABLES>
